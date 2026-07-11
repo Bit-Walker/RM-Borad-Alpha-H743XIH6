@@ -66,6 +66,7 @@ void Start_StateLED_Toggle(void *argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+__weak void bsp_init(void);
 
 /* USER CODE END 0 */
 
@@ -102,6 +103,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
+  bsp_init();
 
   /* USER CODE END 2 */
 
@@ -390,15 +392,10 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_Start_StateLED_Toggle */
-void Start_StateLED_Toggle(void *argument)
+__weak void Start_StateLED_Toggle(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1000);
-    HAL_GPIO_TogglePin(State_LED_GPIO_Port, State_LED_Pin);
-  }
+
   /* USER CODE END 5 */
 }
 

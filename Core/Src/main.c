@@ -50,6 +50,13 @@ const osThreadAttr_t StateLED_Task_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for Debug_Task */
+osThreadId_t Debug_TaskHandle;
+const osThreadAttr_t Debug_Task_attributes = {
+  .name = "Debug_Task",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -59,6 +66,7 @@ void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
 void Start_StateLED_Toggle(void *argument);
+void Start_Debug_Task(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -129,6 +137,9 @@ int main(void)
   /* Create the thread(s) */
   /* creation of StateLED_Task */
   StateLED_TaskHandle = osThreadNew(Start_StateLED_Toggle, NULL, &StateLED_Task_attributes);
+
+  /* creation of Debug_Task */
+  Debug_TaskHandle = osThreadNew(Start_Debug_Task, NULL, &Debug_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -395,8 +406,30 @@ static void MX_GPIO_Init(void)
 __weak void Start_StateLED_Toggle(void *argument)
 {
   /* USER CODE BEGIN 5 */
-
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_Start_Debug_Task */
+/**
+* @brief Function implementing the Debug_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Start_Debug_Task */
+__weak void Start_Debug_Task(void *argument)
+{
+  /* USER CODE BEGIN Start_Debug_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Start_Debug_Task */
 }
 
  /* MPU Configuration */

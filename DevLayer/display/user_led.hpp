@@ -7,12 +7,17 @@
  *
  */
 
-#ifndef USER_LED_HPP_
-#define USER_LED_HPP_
 
+#ifndef USER_LED_HPP
+#define USER_LED_HPP
+
+
+/* 头文件 ---------------------------------------------------------------- */
 #include "stm32h7xx_hal.h"
 #include <cstdint>
 
+
+/* 类定义 ---------------------------------------------------------------- */
 class User_led {
   public:
     /**
@@ -25,13 +30,6 @@ class User_led {
      */
     explicit User_led(GPIO_TypeDef *port, std::uint16_t pin,
                       bool is_reversal = false) noexcept;
-
-    ~User_led() = default;
-
-    User_led(User_led const &)            = delete;
-    User_led &operator=(User_led const &) = delete;
-    User_led(User_led &&)                 = delete;
-    User_led &operator=(User_led &&)      = delete;
 
     /**
      * @brief  读取 LED 状态。
@@ -54,6 +52,16 @@ class User_led {
     /// @brief 翻转 LED。
     void Toggle() const noexcept;
 
+
+    User_led(User_led const &)            = delete;
+    User_led &operator=(User_led const &) = delete;
+    User_led(User_led &&)                 = delete;
+    User_led &operator=(User_led &&)      = delete;
+
+
+    ~User_led() = default;
+
+
   private:
     GPIO_TypeDef *const port_;         ///< GPIO 端口基地址。
     std::uint16_t const pin_;          ///< GPIO 引脚位掩码。
@@ -61,4 +69,5 @@ class User_led {
                                        ///< false = 高电平有效。
 };
 
-#endif /* USER_LED_HPP_ */
+
+#endif /* USER_LED_HPP */

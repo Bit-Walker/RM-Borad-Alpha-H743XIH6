@@ -1,5 +1,7 @@
+/* 头文件 ---------------------------------------------------------------- */
 #include "display/user_led.hpp"
 
+/* 构造函数 --------------------------------------------------------------- */
 User_led::User_led(GPIO_TypeDef *const port,
                    std::uint16_t const pin,
                    bool const          is_reversal) noexcept
@@ -13,7 +15,7 @@ User_led::User_led(GPIO_TypeDef *const port,
     assert_param(IS_GPIO_PIN(pin_));
 }
 
-
+/* 成员方法 --------------------------------------------------------------- */
 bool User_led::Get() const noexcept {
     bool const pin_high = (HAL_GPIO_ReadPin(port_, pin_) == GPIO_PIN_SET);
     return is_reversal_ ? !pin_high : pin_high;

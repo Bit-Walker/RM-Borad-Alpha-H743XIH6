@@ -22,7 +22,6 @@ class User_led {
   public:
     /**
      * @brief  构造一个 User_led 句柄。
-     *
      * @param  port         GPIO 端口基地址。
      * @param  pin          GPIO 引脚位掩码。
      * @param  is_reversal  true  表示 LED 为低电平有效，

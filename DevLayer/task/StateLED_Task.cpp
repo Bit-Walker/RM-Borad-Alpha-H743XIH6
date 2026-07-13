@@ -9,8 +9,8 @@ extern "C" {
         static User_led led(State_LED_GPIO_Port, State_LED_Pin);
         while (true)
         {
-            osDelay(1000);
             led.Toggle();
+            osDelay(pdMS_TO_TICKS(1000));
         }
     }
 }

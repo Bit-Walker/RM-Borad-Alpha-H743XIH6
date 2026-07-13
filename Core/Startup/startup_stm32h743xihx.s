@@ -81,6 +81,75 @@ LoopCopyDataInit:
   adds r4, r0, r3
   cmp r4, r1
   bcc CopyDataInit
+
+/* Copy ITCM section initializers from FLASH to ITCMRAM */
+  ldr r0, =_sitcmram
+  ldr r1, =_eitcmram
+  ldr r2, =_siitcmram
+  movs r3, #0
+  b LoopCopyITCM
+
+CopyITCM:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyITCM:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyITCM
+
+/* Copy DTCM section initializers from FLASH to DTCMRAM */
+  ldr r0, =_sdtcmram
+  ldr r1, =_edtcmram
+  ldr r2, =_sidtcmram
+  movs r3, #0
+  b LoopCopyDTCM
+
+CopyDTCM:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyDTCM:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyDTCM
+
+/* Copy D2 section initializers from FLASH to RAM_D2 */
+  ldr r0, =_sram_d2
+  ldr r1, =_eram_d2
+  ldr r2, =_siram_d2
+  movs r3, #0
+  b LoopCopyD2
+
+CopyD2:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyD2:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyD2
+
+/* Copy D3 section initializers from FLASH to RAM_D3 */
+  ldr r0, =_sram_d3
+  ldr r1, =_eram_d3
+  ldr r2, =_siram_d3
+  movs r3, #0
+  b LoopCopyD3
+
+CopyD3:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyD3:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyD3
+
 /* Zero fill the bss segment. */
   ldr r2, =_sbss
   ldr r4, =_ebss

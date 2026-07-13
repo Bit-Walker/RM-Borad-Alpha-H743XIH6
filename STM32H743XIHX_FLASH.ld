@@ -122,6 +122,19 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
 
+  /* --- Custom section for time-critical code placed in ITCM RAM --- */
+  .itcmram :
+  {
+    . = ALIGN(4);
+    _sitcmram = .;       /* VMA start of ITCM section */
+    *(.itcmram)          /* code/data explicitly placed in ITCM */
+    *(.itcmram*)         /* code/data explicitly placed in ITCM */
+    . = ALIGN(4);
+    _eitcmram = .;       /* VMA end of ITCM section */
+  } >ITCMRAM AT> FLASH
+
+  _siitcmram = LOADADDR(.itcmram);  /* LMA of ITCM section in FLASH */
+
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
@@ -138,6 +151,45 @@ SECTIONS
     . = ALIGN(4);
     _edata = .;        /* define a global symbol at data end */
   } >RAM_D1 AT> FLASH
+
+  /* --- Custom section for data explicitly placed in DTCM RAM --- */
+  .dtcmram :
+  {
+    . = ALIGN(4);
+    _sdtcmram = .;       /* VMA start of DTCM section */
+    *(.dtcmram)          /* data explicitly placed in DTCM */
+    *(.dtcmram*)         /* data explicitly placed in DTCM */
+    . = ALIGN(4);
+    _edtcmram = .;       /* VMA end of DTCM section */
+  } >DTCMRAM AT> FLASH
+
+  _sidtcmram = LOADADDR(.dtcmram);  /* LMA of DTCM section in FLASH */
+
+  /* --- Custom section for data explicitly placed in D2 SRAM --- */
+  .ram_d2 :
+  {
+    . = ALIGN(4);
+    _sram_d2 = .;        /* VMA start of D2 section */
+    *(.ram_d2)           /* data explicitly placed in D2 SRAM */
+    *(.ram_d2*)          /* data explicitly placed in D2 SRAM */
+    . = ALIGN(4);
+    _eram_d2 = .;        /* VMA end of D2 section */
+  } >RAM_D2 AT> FLASH
+
+  _siram_d2 = LOADADDR(.ram_d2);  /* LMA of D2 section in FLASH */
+
+  /* --- Custom section for data explicitly placed in D3 SRAM --- */
+  .ram_d3 :
+  {
+    . = ALIGN(4);
+    _sram_d3 = .;        /* VMA start of D3 section */
+    *(.ram_d3)           /* data explicitly placed in D3 SRAM */
+    *(.ram_d3*)          /* data explicitly placed in D3 SRAM */
+    . = ALIGN(4);
+    _eram_d3 = .;        /* VMA end of D3 section */
+  } >RAM_D3 AT> FLASH
+
+  _siram_d3 = LOADADDR(.ram_d3);  /* LMA of D3 section in FLASH */
 
   /* Uninitialized data section */
   . = ALIGN(4);

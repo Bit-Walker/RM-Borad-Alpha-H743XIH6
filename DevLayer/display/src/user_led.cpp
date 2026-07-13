@@ -1,17 +1,53 @@
 #include "../user_led.hpp"
 
-User_led::User_led(GPIO_TypeDef* port, const uint16_t pin)
-    : port_(port), pin_(pin) {
+User_led::User_led(GPIO_TypeDef *const port,
+                   std::uint16_t const pin,
+                   bool const          is_reversal) noexcept
+    : port_(port), pin_(pin), is_reversal_(is_reversal) {
+
+    assert_param((port_ == GPIOA) || (port_ == GPIOB) || (port_ == GPIOC) ||
+                 (port_ == GPIOD) || (port_ == GPIOE) || (port_ == GPIOF) ||
+                 (port_ == GPIOG) || (port_ == GPIOH) || (port_ == GPIOI) ||
+                 (port_ == GPIOJ) || (port_ == GPIOK));
+
+    assert_param((pin_ == GPIO_PIN_0)  || (pin_ == GPIO_PIN_1)  ||
+                 (pin_ == GPIO_PIN_2)  || (pin_ == GPIO_PIN_3)  ||
+                 (pin_ == GPIO_PIN_4)  || (pin_ == GPIO_PIN_5)  ||
+                 (pin_ == GPIO_PIN_6)  || (pin_ == GPIO_PIN_7)  ||
+                 (pin_ == GPIO_PIN_8)  || (pin_ == GPIO_PIN_9)  ||
+                 (pin_ == GPIO_PIN_10) || (pin_ == GPIO_PIN_11) ||
+                 (pin_ == GPIO_PIN_12) || (pin_ == GPIO_PIN_13) ||
+                 (pin_ == GPIO_PIN_14) || (pin_ == GPIO_PIN_15));
 }
 
-void User_led::On() const {
-    HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_SET);
+
+bool User_led::Get() const noexcept {
+    bool const pin_high = (HAL_GPIO_ReadPin(port_, pin_) == GPIO_PIN_SET);
+    return is_reversal_ ? !pin_high : pin_high;
 }
 
-void User_led::Off() const {
-    HAL_GPIO_WritePin(port_, pin_, GPIO_PIN_RESET);
+
+void User_led::Set(bool const state) const noexcept {
+    if (state) {
+        On();
+    } else {
+        Off();
+    }
 }
 
-void User_led::Toggle() const {
+
+void User_led::On() const noexcept {
+    HAL_GPIO_WritePin(port_, pin_,
+                      is_reversal_ ? GPIO_PIN_RESET : GPIO_PIN_SET);
+}
+
+
+void User_led::Off() const noexcept {
+    HAL_GPIO_WritePin(port_, pin_,
+                      is_reversal_ ? GPIO_PIN_SET : GPIO_PIN_RESET);
+}
+
+
+void User_led::Toggle() const noexcept {
     HAL_GPIO_TogglePin(port_, pin_);
 }

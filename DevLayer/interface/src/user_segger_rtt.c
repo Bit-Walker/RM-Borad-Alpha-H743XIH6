@@ -1,11 +1,12 @@
 /* 头文件 ---------------------------------------------------------------- */
+#include "memory/memory_segmentation.h"
 #include "../user_segger_rtt.h"
 #include <string.h>
 #include <stdio.h>
 
 /* 全局变量 --------------------------------------------------------------- */
-JScope_Transmit_t jscope_transmit = {0};
-uint8_t JScope_RTT_UpBuffer[BUFFER_SIZE_UP] = {0};
+RAM_D2 JScope_Transmit_t jscope_transmit = {0};
+RAM_D2 uint8_t JScope_RTT_UpBuffer[BUFFER_SIZE_UP] = {0};
 
 
 /* 全局函数 --------------------------------------------------------------- */

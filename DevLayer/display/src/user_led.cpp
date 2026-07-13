@@ -1,4 +1,4 @@
-#include "../user_led.hpp"
+#include "display/user_led.hpp"
 
 User_led::User_led(GPIO_TypeDef *const port,
                    std::uint16_t const pin,
@@ -10,14 +10,7 @@ User_led::User_led(GPIO_TypeDef *const port,
                  (port_ == GPIOG) || (port_ == GPIOH) || (port_ == GPIOI) ||
                  (port_ == GPIOJ) || (port_ == GPIOK));
 
-    assert_param((pin_ == GPIO_PIN_0)  || (pin_ == GPIO_PIN_1)  ||
-                 (pin_ == GPIO_PIN_2)  || (pin_ == GPIO_PIN_3)  ||
-                 (pin_ == GPIO_PIN_4)  || (pin_ == GPIO_PIN_5)  ||
-                 (pin_ == GPIO_PIN_6)  || (pin_ == GPIO_PIN_7)  ||
-                 (pin_ == GPIO_PIN_8)  || (pin_ == GPIO_PIN_9)  ||
-                 (pin_ == GPIO_PIN_10) || (pin_ == GPIO_PIN_11) ||
-                 (pin_ == GPIO_PIN_12) || (pin_ == GPIO_PIN_13) ||
-                 (pin_ == GPIO_PIN_14) || (pin_ == GPIO_PIN_15));
+    assert_param(IS_GPIO_PIN(pin_));
 }
 
 
@@ -28,11 +21,7 @@ bool User_led::Get() const noexcept {
 
 
 void User_led::Set(bool const state) const noexcept {
-    if (state) {
-        On();
-    } else {
-        Off();
-    }
+    state ? On() : Off();
 }
 
 

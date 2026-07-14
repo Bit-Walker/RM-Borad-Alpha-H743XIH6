@@ -1,9 +1,9 @@
 #include "main.h"
 #include "FreeRTOS.h"
 #include "cmsis_os2.h"
-#include "../peripheral/user_iwdg.hpp"
+#include "peripheral/user_iwdg.hpp"
 
-
+#ifdef HAL_IWDG_MODULE_ENABLED
 extern "C" {
 [[noreturn]]
     void Start_IWDG_Refresh(void *argument) {
@@ -17,3 +17,4 @@ extern "C" {
         }
     }
 }
+#endif

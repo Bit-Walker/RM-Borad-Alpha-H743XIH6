@@ -1,6 +1,9 @@
 /* 头文件 ---------------------------------------------------------------- */
 #include "peripheral/user_iwdg.hpp"
 
+/* 条件编译 --------------------------------------------------------------- */
+#ifdef HAL_IWDG_MODULE_ENABLED
+
 
 /* 构造函数 --------------------------------------------------------------- */
 User_iwdg::User_iwdg(const IWDG_HandleTypeDef *const handle) noexcept
@@ -70,3 +73,6 @@ std::uint32_t User_iwdg::GetRefreshPeriodMs() const noexcept {
     auto const window_ms = GetWindowMs();
     return (timeout_ms + window_ms) / 2u;
 }
+
+
+#endif /* HAL_IWDG_MODULE_ENABLED */

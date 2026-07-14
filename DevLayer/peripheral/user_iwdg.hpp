@@ -18,6 +18,9 @@
 #include "stm32h7xx_hal.h"
 #include <cstdint>
 
+/* 条件编译 --------------------------------------------------------------- */
+#ifdef HAL_IWDG_MODULE_ENABLED
+
 
 /* 类定义 ---------------------------------------------------------------- */
 class User_iwdg {
@@ -72,4 +75,5 @@ class User_iwdg {
 };
 
 
+#endif /* HAL_IWDG_MODULE_ENABLED */
 #endif /* USER_IWDG_HPP */

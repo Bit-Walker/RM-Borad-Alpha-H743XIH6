@@ -55,6 +55,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern COMP_HandleTypeDef hcomp1;
 extern TIM_HandleTypeDef htim17;
 
 /* USER CODE BEGIN EV */
@@ -171,6 +172,20 @@ void TIM17_IRQHandler(void)
   /* USER CODE BEGIN TIM17_IRQn 1 */
 
   /* USER CODE END TIM17_IRQn 1 */
+}
+
+/**
+  * @brief This function handles COMP1 and COMP2 interrupts through EXTI lines 20 and 21.
+  */
+void COMP_IRQHandler(void)
+{
+  /* USER CODE BEGIN COMP_IRQn 0 */
+
+  /* USER CODE END COMP_IRQn 0 */
+  HAL_COMP_IRQHandler(&hcomp1);
+  /* USER CODE BEGIN COMP_IRQn 1 */
+
+  /* USER CODE END COMP_IRQn 1 */
 }
 
 /* USER CODE BEGIN 1 */

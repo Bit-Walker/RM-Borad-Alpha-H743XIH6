@@ -23,6 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "interface/user_segger_rtt.h"
 
 /* USER CODE END Includes */
 
@@ -42,6 +43,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+COMP_HandleTypeDef hcomp1;
 
 IWDG_HandleTypeDef hiwdg1;
 
@@ -74,6 +76,7 @@ const osThreadAttr_t IWDG_Task_attributes = {
 void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_COMP1_Init(void);
 static void MX_IWDG1_Init(void);
 void Start_StateLED_Toggle(void *argument);
 void Start_Debug_Task(void *argument);
@@ -97,7 +100,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+//  volatile uint32_t x = 0;
+//  while (1) { x++; }
   /* USER CODE END 1 */
 
   /* MPU Configuration--------------------------------------------------------*/
@@ -129,6 +133,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_COMP1_Init();
   MX_IWDG1_Init();
   /* USER CODE BEGIN 2 */
   peripherals_init();
@@ -199,11 +204,11 @@ void SystemClock_Config(void)
 
   /** Supply configuration update enable
   */
-  HAL_PWREx_ConfigSupply(PWR_EXTERNAL_SOURCE_SUPPLY);
+  HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
 
   /** Configure the main internal regulator output voltage
   */
-  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
 
@@ -216,10 +221,10 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;
-  RCC_OscInitStruct.PLL.PLLN = 176;
-  RCC_OscInitStruct.PLL.PLLP = 2;
+  RCC_OscInitStruct.PLL.PLLN = 128;
+  RCC_OscInitStruct.PLL.PLLP = 10;
   RCC_OscInitStruct.PLL.PLLQ = 2;
-  RCC_OscInitStruct.PLL.PLLR = 2;
+  RCC_OscInitStruct.PLL.PLLR = 8;
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
@@ -235,16 +240,50 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
-  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
-  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV1;
+  RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief COMP1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_COMP1_Init(void)
+{
+
+  /* USER CODE BEGIN COMP1_Init 0 */
+
+  /* USER CODE END COMP1_Init 0 */
+
+  /* USER CODE BEGIN COMP1_Init 1 */
+
+  /* USER CODE END COMP1_Init 1 */
+  hcomp1.Instance = COMP1;
+  hcomp1.Init.InvertingInput = COMP_INPUT_MINUS_VREFINT;
+  hcomp1.Init.NonInvertingInput = COMP_INPUT_PLUS_IO2;
+  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
+  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_NONE;
+  hcomp1.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
+  hcomp1.Init.Mode = COMP_POWERMODE_HIGHSPEED;
+  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
+  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
+  if (HAL_COMP_Init(&hcomp1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN COMP1_Init 2 */
+
+  /* USER CODE END COMP1_Init 2 */
+
 }
 
 /**
@@ -318,12 +357,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB5 PB6 PB4 PB7
                            PB3 PB9 PB8 PB10
-                           PB11 PB2 PB1 PB12
-                           PB15 PB0 PB13 PB14 */
+                           PB11 PB1 PB12 PB15
+                           PB0 PB13 PB14 */
   GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_4|GPIO_PIN_7
                           |GPIO_PIN_3|GPIO_PIN_9|GPIO_PIN_8|GPIO_PIN_10
-                          |GPIO_PIN_11|GPIO_PIN_2|GPIO_PIN_1|GPIO_PIN_12
-                          |GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_13|GPIO_PIN_14;
+                          |GPIO_PIN_11|GPIO_PIN_1|GPIO_PIN_12|GPIO_PIN_15
+                          |GPIO_PIN_0|GPIO_PIN_13|GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -615,7 +654,8 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+  // SEGGER_RTT_printf(0, "Wrong parameters value: file %s on line %d\r\n", file, line);
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

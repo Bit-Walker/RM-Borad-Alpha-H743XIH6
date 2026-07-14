@@ -16,6 +16,9 @@
 #include "stm32h7xx_hal.h"
 #include <cstdint>
 
+/* 条件编译 --------------------------------------------------------------- */
+#ifdef HAL_GPIO_MODULE_ENABLED
+
 
 /* 类定义 ---------------------------------------------------------------- */
 class User_led {
@@ -69,4 +72,5 @@ class User_led {
 };
 
 
+#endif /* HAL_GPIO_MODULE_ENABLED */
 #endif /* USER_LED_HPP */

@@ -3,7 +3,7 @@
 #include "cmsis_os2.h"
 #include "display/user_led.hpp"
 
-// #define STATE_LED_TASK_ENABLED
+#define STATE_LED_TASK_ENABLED
 
 #ifdef HAL_GPIO_MODULE_ENABLED
 #ifdef STATE_LED_TASK_ENABLED

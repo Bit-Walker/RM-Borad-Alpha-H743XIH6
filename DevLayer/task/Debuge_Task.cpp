@@ -9,6 +9,18 @@
 
 extern "C" {
 [[noreturn]]
+    void Test_Template(void) {
+
+        while (true) {
+
+            osDelay(pdMS_TO_TICKS(1000));
+        }
+    }
+}
+
+
+extern "C" {
+[[noreturn]]
     void Test_RTT(void) {
         while (true) {
             uint8_t x = 0;
@@ -48,7 +60,7 @@ extern "C" {
         comp.Start();
         while (true) {
 
-            osDelay(pdMS_TO_TICKS(500));
+            osDelay(pdMS_TO_TICKS(1000));
         }
     }
 }
@@ -57,6 +69,6 @@ extern "C" {
 
 extern "C" {
     void Start_Debug_Task(void *argument) {
-        Test_COMP();
+        Test_Template();
     }
 }

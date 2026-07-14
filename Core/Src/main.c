@@ -43,7 +43,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-COMP_HandleTypeDef hcomp1;
 
 IWDG_HandleTypeDef hiwdg1;
 
@@ -59,7 +58,7 @@ osThreadId_t Debug_TaskHandle;
 const osThreadAttr_t Debug_Task_attributes = {
   .name = "Debug_Task",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for IWDG_Task */
 osThreadId_t IWDG_TaskHandle;
@@ -76,7 +75,6 @@ const osThreadAttr_t IWDG_Task_attributes = {
 void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_COMP1_Init(void);
 static void MX_IWDG1_Init(void);
 void Start_StateLED_Toggle(void *argument);
 void Start_Debug_Task(void *argument);
@@ -133,7 +131,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_COMP1_Init();
   MX_IWDG1_Init();
   /* USER CODE BEGIN 2 */
   peripherals_init();
@@ -253,40 +250,6 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief COMP1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_COMP1_Init(void)
-{
-
-  /* USER CODE BEGIN COMP1_Init 0 */
-
-  /* USER CODE END COMP1_Init 0 */
-
-  /* USER CODE BEGIN COMP1_Init 1 */
-
-  /* USER CODE END COMP1_Init 1 */
-  hcomp1.Instance = COMP1;
-  hcomp1.Init.InvertingInput = COMP_INPUT_MINUS_VREFINT;
-  hcomp1.Init.NonInvertingInput = COMP_INPUT_PLUS_IO2;
-  hcomp1.Init.OutputPol = COMP_OUTPUTPOL_NONINVERTED;
-  hcomp1.Init.Hysteresis = COMP_HYSTERESIS_NONE;
-  hcomp1.Init.BlankingSrce = COMP_BLANKINGSRC_NONE;
-  hcomp1.Init.Mode = COMP_POWERMODE_HIGHSPEED;
-  hcomp1.Init.WindowMode = COMP_WINDOWMODE_DISABLE;
-  hcomp1.Init.TriggerMode = COMP_TRIGGERMODE_IT_RISING_FALLING;
-  if (HAL_COMP_Init(&hcomp1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN COMP1_Init 2 */
-
-  /* USER CODE END COMP1_Init 2 */
-
-}
-
-/**
   * @brief IWDG1 Initialization Function
   * @param None
   * @retval None
@@ -357,12 +320,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : PB5 PB6 PB4 PB7
                            PB3 PB9 PB8 PB10
-                           PB11 PB1 PB12 PB15
-                           PB0 PB13 PB14 */
+                           PB11 PB2 PB1 PB12
+                           PB15 PB0 PB13 PB14 */
   GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_4|GPIO_PIN_7
                           |GPIO_PIN_3|GPIO_PIN_9|GPIO_PIN_8|GPIO_PIN_10
-                          |GPIO_PIN_11|GPIO_PIN_1|GPIO_PIN_12|GPIO_PIN_15
-                          |GPIO_PIN_0|GPIO_PIN_13|GPIO_PIN_14;
+                          |GPIO_PIN_11|GPIO_PIN_2|GPIO_PIN_1|GPIO_PIN_12
+                          |GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_13|GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

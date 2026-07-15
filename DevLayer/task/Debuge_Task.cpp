@@ -3,7 +3,7 @@
 #include "cmsis_os2.h"
 #include "bsp_register.h"
 #include "interface/user_segger_rtt.h"
-#include "interface/shell_port.h"
+#include "../shell/shell_port.h"
 
 
 extern "C" {

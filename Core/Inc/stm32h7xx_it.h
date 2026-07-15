@@ -53,6 +53,8 @@ void BusFault_Handler(void);
 void UsageFault_Handler(void);
 void DebugMon_Handler(void);
 void TIM17_IRQHandler(void);
+void BDMA_Channel0_IRQHandler(void);
+void BDMA_Channel1_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

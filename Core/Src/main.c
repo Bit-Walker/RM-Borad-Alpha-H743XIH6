@@ -46,6 +46,10 @@
 
 IWDG_HandleTypeDef hiwdg1;
 
+UART_HandleTypeDef hlpuart1;
+DMA_HandleTypeDef hdma_lpuart1_rx;
+DMA_HandleTypeDef hdma_lpuart1_tx;
+
 /* Definitions for StateLED_Task */
 osThreadId_t StateLED_TaskHandle;
 const osThreadAttr_t StateLED_Task_attributes = {
@@ -82,7 +86,9 @@ const osThreadAttr_t Shell_Task_attributes = {
 void SystemClock_Config(void);
 static void MPU_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_BDMA_Init(void);
 static void MX_IWDG1_Init(void);
+static void MX_LPUART1_UART_Init(void);
 void Start_StateLED_Toggle(void *argument);
 void Start_Debug_Task(void *argument);
 void Start_IWDG_Refresh(void *argument);
@@ -138,7 +144,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_BDMA_Init();
   MX_IWDG1_Init();
+  MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
   JScope_Init();
   BSP_Init();
@@ -290,6 +298,73 @@ static void MX_IWDG1_Init(void)
 }
 
 /**
+  * @brief LPUART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_LPUART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN LPUART1_Init 0 */
+
+  /* USER CODE END LPUART1_Init 0 */
+
+  /* USER CODE BEGIN LPUART1_Init 1 */
+
+  /* USER CODE END LPUART1_Init 1 */
+  hlpuart1.Instance = LPUART1;
+  hlpuart1.Init.BaudRate = 115200;
+  hlpuart1.Init.WordLength = UART_WORDLENGTH_8B;
+  hlpuart1.Init.StopBits = UART_STOPBITS_1;
+  hlpuart1.Init.Parity = UART_PARITY_NONE;
+  hlpuart1.Init.Mode = UART_MODE_TX_RX;
+  hlpuart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  hlpuart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  hlpuart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+  hlpuart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  hlpuart1.FifoMode = UART_FIFOMODE_DISABLE;
+  if (HAL_UART_Init(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetTxFifoThreshold(&hlpuart1, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_SetRxFifoThreshold(&hlpuart1, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_UARTEx_DisableFifoMode(&hlpuart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN LPUART1_Init 2 */
+
+  /* USER CODE END LPUART1_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_BDMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_BDMA_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* BDMA_Channel0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(BDMA_Channel0_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(BDMA_Channel0_IRQn);
+  /* BDMA_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(BDMA_Channel1_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(BDMA_Channel1_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -422,14 +497,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF8_UART8;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PB6 PB7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF8_LPUART;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB4 */
   GPIO_InitStruct.Pin = GPIO_PIN_4;

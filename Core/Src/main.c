@@ -51,7 +51,7 @@ osThreadId_t StateLED_TaskHandle;
 const osThreadAttr_t StateLED_Task_attributes = {
   .name = "StateLED_Task",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for Debug_Task */
 osThreadId_t Debug_TaskHandle;
@@ -67,6 +67,13 @@ const osThreadAttr_t IWDG_Task_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
+/* Definitions for Shell_Task */
+osThreadId_t Shell_TaskHandle;
+const osThreadAttr_t Shell_Task_attributes = {
+  .name = "Shell_Task",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -79,6 +86,7 @@ static void MX_IWDG1_Init(void);
 void Start_StateLED_Toggle(void *argument);
 void Start_Debug_Task(void *argument);
 void Start_IWDG_Refresh(void *argument);
+void Start_Latter_Shell(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -165,6 +173,9 @@ int main(void)
 
   /* creation of IWDG_Task */
   IWDG_TaskHandle = osThreadNew(Start_IWDG_Refresh, NULL, &IWDG_Task_attributes);
+
+  /* creation of Shell_Task */
+  Shell_TaskHandle = osThreadNew(Start_Latter_Shell, NULL, &Shell_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -908,6 +919,24 @@ __weak void Start_IWDG_Refresh(void *argument)
     osDelay(1);
   }
   /* USER CODE END Start_IWDG_Refresh */
+}
+
+/* USER CODE BEGIN Header_Start_Latter_Shell */
+/**
+* @brief Function implementing the Shell_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Start_Latter_Shell */
+__weak void Start_Latter_Shell(void *argument)
+{
+  /* USER CODE BEGIN Start_Latter_Shell */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Start_Latter_Shell */
 }
 
  /* MPU Configuration */

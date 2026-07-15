@@ -23,13 +23,13 @@
 
 
 /* 类定义 ---------------------------------------------------------------- */
-class User_iwdg {
+class User_IWDG {
   public:
     /**
      * @brief  用 IWDG 句柄构造对象。
      * @param  handle  指向 CubeMX 生成的 IWDG_HandleTypeDef 的指针。
      */
-    explicit User_iwdg(IWDG_HandleTypeDef *handle) noexcept;
+    explicit User_IWDG(IWDG_HandleTypeDef *handle) noexcept;
 
     /**
      * @brief  启动 IWDG 递减计数器。
@@ -38,9 +38,10 @@ class User_iwdg {
 
     /**
      * @brief  重装载 IWDG 计数器。
+     * @return 是否成功重装载。
      * @note   必须在超时周期内周期性调用，否则触发系统复位。
      */
-    void Refresh() const noexcept;
+    [[nodiscard]] bool Refresh() const noexcept;
 
     /// @brief 获取当前预分频器配置值。
     [[nodiscard]] std::uint32_t GetPrescaler() const noexcept;
@@ -61,13 +62,13 @@ class User_iwdg {
     [[nodiscard]] std::uint32_t GetRefreshPeriodMs() const noexcept;
 
 
-    User_iwdg(User_iwdg const &)            = delete;
-    User_iwdg &operator=(User_iwdg const &) = delete;
-    User_iwdg(User_iwdg &&)                 = delete;
-    User_iwdg &operator=(User_iwdg &&)      = delete;
+    User_IWDG(User_IWDG const &)            = delete;
+    User_IWDG &operator=(User_IWDG const &) = delete;
+    User_IWDG(User_IWDG &&)                 = delete;
+    User_IWDG &operator=(User_IWDG &&)      = delete;
 
 
-    ~User_iwdg() = default;
+    ~User_IWDG() = default;
 
 
   private:

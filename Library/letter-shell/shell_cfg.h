@@ -13,14 +13,8 @@
 #define __SHELL_CFG_H__
 
 #include <stdint.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern uint32_t xTaskGetTickCount(void);
-#ifdef __cplusplus
-}
-#endif
+#include "FreeRTOS.h"
+#include "task.h"
 
 #ifdef SHELL_CFG_USER
 #include SHELL_CFG_USER
@@ -49,7 +43,7 @@ extern uint32_t xTaskGetTickCount(void);
  * @brief 是否使用shell伴生对象
  *        一些扩展的组件(文件系统支持，日志工具等)需要使用伴生对象
  */
-#define     SHELL_USING_COMPANION       0
+#define     SHELL_USING_COMPANION       1
 #endif /** SHELL_USING_COMPANION */
 
 #ifndef SHELL_SUPPORT_END_LINE
@@ -206,7 +200,7 @@ extern uint32_t xTaskGetTickCount(void);
  * @brief shell内存分配
  *        shell本身不需要此接口，若使用shell伴生对象，需要进行定义
  */
-#define     SHELL_MALLOC(size)          0
+#define     SHELL_MALLOC(size)          pvPortMalloc(size)
 #endif /** SHELL_MALLOC */
 
 #ifndef SHELL_FREE
@@ -214,7 +208,7 @@ extern uint32_t xTaskGetTickCount(void);
  * @brief shell内存释放
  *        shell本身不需要此接口，若使用shell伴生对象，需要进行定义
  */
-#define     SHELL_FREE(obj)             0
+#define     SHELL_FREE(obj)             vPortFree(obj)
 #endif /** SHELL_FREE */
 
 #ifndef SHELL_SHOW_INFO

@@ -23,32 +23,32 @@
 
 
 /* 类定义 ---------------------------------------------------------------- */
-class User_comp {
+class User_COMP {
   public:
     /// @brief 中断触发回调函数类型。arg 为 SetCallback() 传入的用户参数。
-    using Callback = void (*)(User_comp const *, void *arg);
+    using Callback = void (*)(User_COMP const *, void *arg);
 
     /**
      * @brief  用 COMP 句柄构造对象。
      * @param  handle  指向 CubeMX 生成的 COMP_HandleTypeDef 的指针。
-     * @param  cb      中断触发回调。默认 nullptr 为轮询模式，非空则采用中断模式。
-     * @param  arg     回调时透传的用户参数。
      */
-    explicit User_comp(COMP_HandleTypeDef *handle,
-                       Callback cb  = nullptr,
-                       void    *arg = nullptr) noexcept;
+    explicit User_COMP(COMP_HandleTypeDef *handle) noexcept;
 
     /**
      * @brief  启动比较器。
+     * @param  cb   中断回调。非空则以中断模式启动并更新已存回调。
+     * @param  arg  回调透传参数。仅当 cb 非空时有效。
+     * @return 是否成功启动。
      * @note   若构造时传入了回调则自动以中断模式启动，
      *         否则以轮询模式启动。
      */
-    void Start() const noexcept;
+    [[nodiscard]] bool Start(Callback cb = nullptr, void *arg = nullptr) noexcept;
 
     /**
      * @brief  停止比较器。
+     * @return 是否成功停止。
      */
-    void Stop() const noexcept;
+    [[nodiscard]] bool Stop() const noexcept;
 
     /**
      * @brief  读取比较器输出电平。
@@ -74,13 +74,13 @@ class User_comp {
     [[nodiscard]] std::uint32_t GetInvertingInput() const noexcept;
 
 
-    User_comp(User_comp const &)            = delete;
-    User_comp &operator=(User_comp const &) = delete;
-    User_comp(User_comp &&)                 = delete;
-    User_comp &operator=(User_comp &&)      = delete;
+    User_COMP(User_COMP const &)            = delete;
+    User_COMP &operator=(User_COMP const &) = delete;
+    User_COMP(User_COMP &&)                 = delete;
+    User_COMP &operator=(User_COMP &&)      = delete;
 
 
-    ~User_comp() = default;
+    ~User_COMP() = default;
 
 
   private:

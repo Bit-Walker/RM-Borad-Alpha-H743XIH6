@@ -1,5 +1,5 @@
 /* 头文件 ---------------------------------------------------------------- */
-#include "peripheral/user_comp.hpp"
+#include "peripheral/User_COMP.hpp"
 
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_COMP_MODULE_ENABLED
@@ -9,7 +9,7 @@
 
 /* 命名空间 --------------------------------------------------------------- */
 namespace {
-    User_comp    *comp_instances[USER_COMP_MAX_INSTANCES] = {};
+    User_COMP    *comp_instances[USER_COMP_MAX_INSTANCES] = {};
     std::uint32_t comp_count = 0;
 }
 
@@ -29,12 +29,8 @@ extern "C" void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
 /* 构造函数 --------------------------------------------------------------- */
-User_comp::User_comp(COMP_HandleTypeDef *const handle,
-                     Callback const cb,
-                     void *const    arg) noexcept
-    : handle_(handle),
-      callback_(cb),
-      callback_arg_(arg) {
+User_COMP::User_COMP(COMP_HandleTypeDef *const handle) noexcept
+    : handle_(handle) {
 
     assert_param(handle != nullptr);
     assert_param(comp_count < USER_COMP_MAX_INSTANCES);
@@ -48,52 +44,57 @@ User_comp::User_comp(COMP_HandleTypeDef *const handle,
 
 
 /* 成员方法 --------------------------------------------------------------- */
-void User_comp::Start() const noexcept {
-    if (callback_) {
-        HAL_COMP_Start_IT(handle_);
-    } else {
-        __HAL_COMP_ENABLE(handle_);
+bool User_COMP::Start(Callback const cb, void *const arg) noexcept {
+    if (cb != nullptr) {
+        callback_     = cb;
+        callback_arg_ = arg;
     }
+
+    if (callback_) {
+        return (HAL_COMP_Start_IT(handle_) == HAL_OK);
+    }
+
+    return (HAL_COMP_Start(handle_) == HAL_OK);
 }
 
 
-void User_comp::Stop() const noexcept {
+bool User_COMP::Stop() const noexcept {
     if (callback_) {
-        HAL_COMP_Stop_IT(handle_);
-    } else {
-        __HAL_COMP_DISABLE(handle_);
+        return (HAL_COMP_Stop_IT(handle_) == HAL_OK);
     }
+
+    return (HAL_COMP_Stop(handle_) == HAL_OK);
 }
 
 
-bool User_comp::GetOutputLevel() const noexcept {
+bool User_COMP::GetOutputLevel() const noexcept {
     return (HAL_COMP_GetOutputLevel(handle_) != COMP_OUTPUT_LEVEL_LOW);
 }
 
 
-void User_comp::SetCallbackArg(void *const arg) noexcept {
+void User_COMP::SetCallbackArg(void *const arg) noexcept {
     assert_param(callback_ != nullptr);
 
     callback_arg_ = arg;
 }
 
 
-std::uint32_t User_comp::GetMode() const noexcept {
+std::uint32_t User_COMP::GetMode() const noexcept {
     return handle_->Init.Mode;
 }
 
 
-std::uint32_t User_comp::GetNonInvertingInput() const noexcept {
+std::uint32_t User_COMP::GetNonInvertingInput() const noexcept {
     return handle_->Init.NonInvertingInput;
 }
 
 
-std::uint32_t User_comp::GetInvertingInput() const noexcept {
+std::uint32_t User_COMP::GetInvertingInput() const noexcept {
     return handle_->Init.InvertingInput;
 }
 
 
-void User_comp::OnTrigger() const noexcept {
+void User_COMP::OnTrigger() const noexcept {
     if (callback_) {
         callback_(this, callback_arg_);
     }

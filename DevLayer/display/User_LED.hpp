@@ -21,7 +21,7 @@
 
 
 /* 类定义 ---------------------------------------------------------------- */
-class User_led {
+class User_LED {
   public:
     /**
      * @brief  构造一个 User_led 句柄。
@@ -30,7 +30,7 @@ class User_led {
      * @param  is_reversal  true  表示 LED 为低电平有效，
      *                      false 表示 LED 为高电平有效。
      */
-    explicit User_led(GPIO_TypeDef *port, std::uint16_t pin,
+    explicit User_LED(GPIO_TypeDef *port, std::uint16_t pin,
                       bool is_reversal = false) noexcept;
 
     /**
@@ -55,13 +55,13 @@ class User_led {
     void Toggle() const noexcept;
 
 
-    User_led(User_led const &)            = delete;
-    User_led &operator=(User_led const &) = delete;
-    User_led(User_led &&)                 = delete;
-    User_led &operator=(User_led &&)      = delete;
+    User_LED(User_LED const &)            = delete;
+    User_LED &operator=(User_LED const &) = delete;
+    User_LED(User_LED &&)                 = delete;
+    User_LED &operator=(User_LED &&)      = delete;
 
 
-    ~User_led() = default;
+    ~User_LED() = default;
 
 
   private:

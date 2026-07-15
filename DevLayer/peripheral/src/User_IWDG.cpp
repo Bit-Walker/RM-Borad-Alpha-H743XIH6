@@ -1,5 +1,5 @@
 /* 头文件 ---------------------------------------------------------------- */
-#include "peripheral/user_iwdg.hpp"
+#include "peripheral/User_IWDG.hpp"
 
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_IWDG_MODULE_ENABLED
@@ -9,7 +9,7 @@
 
 
 /* 构造函数 --------------------------------------------------------------- */
-User_iwdg::User_iwdg(IWDG_HandleTypeDef *const handle) noexcept
+User_IWDG::User_IWDG(IWDG_HandleTypeDef *const handle) noexcept
     : handle_(handle) {
 
     assert_param(handle != nullptr);
@@ -17,32 +17,32 @@ User_iwdg::User_iwdg(IWDG_HandleTypeDef *const handle) noexcept
 
 
 /* 成员方法 --------------------------------------------------------------- */
-void User_iwdg::Start() const noexcept {
+void User_IWDG::Start() const noexcept {
     __HAL_IWDG_START(handle_);
 }
 
 
-void User_iwdg::Refresh() const noexcept {
-    __HAL_IWDG_RELOAD_COUNTER(handle_);
+bool User_IWDG::Refresh() const noexcept {
+    return (HAL_IWDG_Refresh(handle_) == HAL_OK);
 }
 
 
-std::uint32_t User_iwdg::GetPrescaler() const noexcept {
+std::uint32_t User_IWDG::GetPrescaler() const noexcept {
     return handle_->Init.Prescaler;
 }
 
 
-std::uint32_t User_iwdg::GetReload() const noexcept {
+std::uint32_t User_IWDG::GetReload() const noexcept {
     return handle_->Init.Reload;
 }
 
 
-std::uint32_t User_iwdg::GetWindow() const noexcept {
+std::uint32_t User_IWDG::GetWindow() const noexcept {
     return handle_->Init.Window;
 }
 
 
-std::uint32_t User_iwdg::GetTimeoutMs() const noexcept {
+std::uint32_t User_IWDG::GetTimeoutMs() const noexcept {
     auto const prescaler = handle_->Init.Prescaler;
     auto const reload    = handle_->Init.Reload;
     auto const divider   = 4u << prescaler;
@@ -51,7 +51,7 @@ std::uint32_t User_iwdg::GetTimeoutMs() const noexcept {
 }
 
 
-std::uint32_t User_iwdg::GetWindowMs() const noexcept {
+std::uint32_t User_IWDG::GetWindowMs() const noexcept {
     auto const window = handle_->Init.Window;
 
     if (window == IWDG_WINDOW_DISABLE) {
@@ -66,7 +66,7 @@ std::uint32_t User_iwdg::GetWindowMs() const noexcept {
 }
 
 
-std::uint32_t User_iwdg::GetRefreshPeriodMs() const noexcept {
+std::uint32_t User_IWDG::GetRefreshPeriodMs() const noexcept {
     auto const timeout_ms = GetTimeoutMs();
     std::uint32_t period_ms;
 

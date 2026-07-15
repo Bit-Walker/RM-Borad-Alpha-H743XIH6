@@ -3,6 +3,7 @@
 #include "cmsis_os2.h"
 #include "bsp_register.h"
 #include "interface/user_segger_rtt.h"
+#include "interface/shell_port.h"
 
 
 extern "C" {
@@ -31,19 +32,6 @@ extern "C" {
 }
 
 
-extern "C" {
-[[noreturn]]
-    void Test_Shell(void) {
-        ShellPort_Init();
-
-        while (true) {
-            shellTask(&shell);
-            osDelay(pdMS_TO_TICKS(10));
-        }
-    }
-}
-
-
 #ifdef HAL_GPIO_MODULE_ENABLED
 extern "C" {
 [[noreturn]]
@@ -59,18 +47,17 @@ extern "C" {
 
 #ifdef HAL_COMP_MODULE_ENABLED
 extern "C" {
-    void COMP_Callback(User_comp const *comp, void *argument) {
-        const auto led = static_cast<User_led *>(argument);
+    void COMP_Callback(User_COMP const *comp, void *argument) {
+        const auto led = static_cast<User_LED *>(argument);
         led->Set(comp->GetOutputLevel());
     }
 [[noreturn]]
     void Test_COMP(void) {
-        static User_led led(State_LED_GPIO_Port, State_LED_Pin);
-        static User_comp comp(&hcomp1, COMP_Callback, &led);
-        comp.Start();
+        if (!comp_1.Start(COMP_Callback, &state_led)) {
+            Error_Handler();
+        }
         while (true) {
-
-            osDelay(pdMS_TO_TICKS(1000));
+            osDelay(pdMS_TO_TICKS(100));
         }
     }
 }

@@ -1,12 +1,12 @@
 /* 头文件 ---------------------------------------------------------------- */
-#include "peripheral/user_crc.hpp"
+#include "peripheral/User_CRC.hpp"
 
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_CRC_MODULE_ENABLED
 
 
 /* 构造函数 --------------------------------------------------------------- */
-User_crc::User_crc(CRC_HandleTypeDef *handle) noexcept
+User_CRC::User_CRC(CRC_HandleTypeDef *handle) noexcept
     : handle_(handle) {
 
     assert_param(handle != nullptr);
@@ -14,7 +14,7 @@ User_crc::User_crc(CRC_HandleTypeDef *handle) noexcept
 
 
 /* 成员方法 --------------------------------------------------------------- */
-std::uint32_t User_crc::Calculate(std::uint32_t pBuffer[],
+std::uint32_t User_CRC::Calculate(std::uint32_t const pBuffer[],
                                   std::uint32_t const length) const noexcept {
     assert_param(pBuffer != nullptr);
     assert_param(length > 0);
@@ -23,7 +23,7 @@ std::uint32_t User_crc::Calculate(std::uint32_t pBuffer[],
 }
 
 
-std::uint32_t User_crc::Accumulate(std::uint32_t pBuffer[],
+std::uint32_t User_CRC::Accumulate(std::uint32_t const pBuffer[],
                                    std::uint32_t const length) const noexcept {
     assert_param(pBuffer != nullptr);
     assert_param(length > 0);
@@ -32,27 +32,27 @@ std::uint32_t User_crc::Accumulate(std::uint32_t pBuffer[],
 }
 
 
-void User_crc::Reset() const noexcept {
+void User_CRC::Reset() const noexcept {
     __HAL_CRC_DR_RESET(handle_);
 }
 
 
-void User_crc::SetInitValue(std::uint32_t const value) const noexcept {
+void User_CRC::SetInitValue(std::uint32_t const value) const noexcept {
     __HAL_CRC_INITIALCRCVALUE_CONFIG(handle_, value);
 }
 
 
-std::uint32_t User_crc::GetPolynomial() const noexcept {
+std::uint32_t User_CRC::GetPolynomial() const noexcept {
     return handle_->Init.GeneratingPolynomial;
 }
 
 
-std::uint32_t User_crc::GetCRCLength() const noexcept {
+std::uint32_t User_CRC::GetCRCLength() const noexcept {
     return handle_->Init.CRCLength;
 }
 
 
-std::uint32_t User_crc::GetInitValue() const noexcept {
+std::uint32_t User_CRC::GetInitValue() const noexcept {
     return handle_->Init.InitValue;
 }
 

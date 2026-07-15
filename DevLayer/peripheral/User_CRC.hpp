@@ -22,13 +22,13 @@
 
 
 /* 类定义 ---------------------------------------------------------------- */
-class User_crc {
+class User_CRC {
   public:
     /**
      * @brief  用 CRC 句柄构造对象。
      * @param  handle  指向 CubeMX 生成的 CRC_HandleTypeDef 的指针。
      */
-    explicit User_crc(CRC_HandleTypeDef *handle) noexcept;
+    explicit User_CRC(CRC_HandleTypeDef *handle) noexcept;
 
     /**
      * @brief  单次计算 CRC。
@@ -36,7 +36,7 @@ class User_crc {
      * @param  length   数据长度（单位由 InputDataFormat 决定）。
      * @return  CRC 计算结果。
      */
-    [[nodiscard]] std::uint32_t Calculate(std::uint32_t pBuffer[],
+    [[nodiscard]] std::uint32_t Calculate(std::uint32_t const pBuffer[],
                                           std::uint32_t length) const noexcept;
 
     /**
@@ -45,7 +45,7 @@ class User_crc {
      * @param  length   数据长度（单位由 InputDataFormat 决定）。
      * @return  当前累加的 CRC 结果。
      */
-    [[nodiscard]] std::uint32_t Accumulate(std::uint32_t pBuffer[],
+    [[nodiscard]] std::uint32_t Accumulate(std::uint32_t const pBuffer[],
                                            std::uint32_t length) const noexcept;
 
     /**
@@ -69,13 +69,13 @@ class User_crc {
     [[nodiscard]] std::uint32_t GetInitValue() const noexcept;
 
 
-    User_crc(User_crc const &)            = delete;
-    User_crc &operator=(User_crc const &) = delete;
-    User_crc(User_crc &&)                 = delete;
-    User_crc &operator=(User_crc &&)      = delete;
+    User_CRC(User_CRC const &)            = delete;
+    User_CRC &operator=(User_CRC const &) = delete;
+    User_CRC(User_CRC &&)                 = delete;
+    User_CRC &operator=(User_CRC &&)      = delete;
 
 
-    ~User_crc() = default;
+    ~User_CRC() = default;
 
 
   private:

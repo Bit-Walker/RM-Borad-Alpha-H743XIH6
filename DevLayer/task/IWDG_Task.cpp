@@ -9,8 +9,11 @@ extern "C" {
     void Start_IWDG_Refresh(void *argument) {
         iwdg.Start();
         while (true) {
-            iwdg.Refresh();
-            osDelay(pdMS_TO_TICKS(iwdg.GetRefreshPeriodMs()));
+            if (iwdg.Refresh()) {
+                osDelay(pdMS_TO_TICKS(iwdg.GetRefreshPeriodMs()));
+            } else {
+                osDelay(pdMS_TO_TICKS(1));
+            }
         }
     }
 }

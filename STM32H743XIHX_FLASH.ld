@@ -122,6 +122,17 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
 
+  /* --- Custom section for letter-shell command export --- */
+  .shellCommand :
+  {
+    . = ALIGN(4);
+    _shell_command_start = .;       /* start of shell command array */
+    KEEP(*(shellCommand))           /* shell command entries */
+    KEEP(*(shellCommand*))          /* shell command wildcard */
+    . = ALIGN(4);
+    _shell_command_end = .;         /* end of shell command array */
+  } >FLASH
+
   /* --- Custom section for time-critical code placed in ITCM RAM --- */
   .itcmram :
   {

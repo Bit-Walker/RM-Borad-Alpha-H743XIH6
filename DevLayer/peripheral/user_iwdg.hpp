@@ -29,7 +29,7 @@ class User_iwdg {
      * @brief  用 IWDG 句柄构造对象。
      * @param  handle  指向 CubeMX 生成的 IWDG_HandleTypeDef 的指针。
      */
-    explicit User_iwdg(const IWDG_HandleTypeDef *handle) noexcept;
+    explicit User_iwdg(IWDG_HandleTypeDef *handle) noexcept;
 
     /**
      * @brief  启动 IWDG 递减计数器。
@@ -71,7 +71,7 @@ class User_iwdg {
 
 
   private:
-    IWDG_HandleTypeDef handle_;  ///< IWDG HAL 句柄。
+    IWDG_HandleTypeDef *handle_;  ///< IWDG HAL 句柄指针。
 };
 
 

@@ -1,10 +1,8 @@
 #include "main.h"
 #include "FreeRTOS.h"
 #include "cmsis_os2.h"
+#include "bsp_register.h"
 #include "interface/user_segger_rtt.h"
-#include "peripheral/user_iwdg.hpp"
-#include "display/user_led.hpp"
-#include "peripheral/user_comp.hpp"
 
 
 extern "C" {
@@ -33,13 +31,25 @@ extern "C" {
 }
 
 
+extern "C" {
+[[noreturn]]
+    void Test_Shell(void) {
+        ShellPort_Init();
+
+        while (true) {
+            shellTask(&shell);
+            osDelay(pdMS_TO_TICKS(10));
+        }
+    }
+}
+
+
 #ifdef HAL_GPIO_MODULE_ENABLED
 extern "C" {
 [[noreturn]]
     void Test_LED(void) {
-        static User_led led(State_LED_GPIO_Port, State_LED_Pin);
         while (true) {
-            led.Toggle();
+            state_led.Toggle();
             osDelay(pdMS_TO_TICKS(1000));
         }
     }

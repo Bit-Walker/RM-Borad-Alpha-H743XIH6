@@ -19,7 +19,7 @@ namespace {
 extern "C" void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
     for (std::uint32_t i = 0; i < comp_count; i++) {
         if (const auto *const self = comp_instances[i]) {
-            if (self->handle_.Instance == hcomp->Instance) {
+            if (self->handle_->Instance == hcomp->Instance) {
                 self->OnTrigger();
                 break;
             }
@@ -29,10 +29,10 @@ extern "C" void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
 
 
 /* 构造函数 --------------------------------------------------------------- */
-User_comp::User_comp(const COMP_HandleTypeDef *const handle,
+User_comp::User_comp(COMP_HandleTypeDef *const handle,
                      Callback const cb,
                      void *const    arg) noexcept
-    : handle_(*handle),
+    : handle_(handle),
       callback_(cb),
       callback_arg_(arg) {
 
@@ -40,7 +40,7 @@ User_comp::User_comp(const COMP_HandleTypeDef *const handle,
     assert_param(comp_count < USER_COMP_MAX_INSTANCES);
 
     for (std::uint32_t i = 0; i < comp_count; i++) {
-        assert_param(comp_instances[i]->handle_.Instance != handle->Instance);
+        assert_param(comp_instances[i]->handle_->Instance != handle->Instance);
     }
 
     comp_instances[comp_count++] = this;
@@ -48,26 +48,26 @@ User_comp::User_comp(const COMP_HandleTypeDef *const handle,
 
 
 /* 成员方法 --------------------------------------------------------------- */
-void User_comp::Start() noexcept {
+void User_comp::Start() const noexcept {
     if (callback_) {
-        HAL_COMP_Start_IT(&handle_);
+        HAL_COMP_Start_IT(handle_);
     } else {
-        __HAL_COMP_ENABLE(&handle_);
+        __HAL_COMP_ENABLE(handle_);
     }
 }
 
 
-void User_comp::Stop() noexcept {
+void User_comp::Stop() const noexcept {
     if (callback_) {
-        HAL_COMP_Stop_IT(&handle_);
+        HAL_COMP_Stop_IT(handle_);
     } else {
-        __HAL_COMP_DISABLE(&handle_);
+        __HAL_COMP_DISABLE(handle_);
     }
 }
 
 
 bool User_comp::GetOutputLevel() const noexcept {
-    return (HAL_COMP_GetOutputLevel(&handle_) != COMP_OUTPUT_LEVEL_LOW);
+    return (HAL_COMP_GetOutputLevel(handle_) != COMP_OUTPUT_LEVEL_LOW);
 }
 
 
@@ -79,17 +79,17 @@ void User_comp::SetCallbackArg(void *const arg) noexcept {
 
 
 std::uint32_t User_comp::GetMode() const noexcept {
-    return handle_.Init.Mode;
+    return handle_->Init.Mode;
 }
 
 
 std::uint32_t User_comp::GetNonInvertingInput() const noexcept {
-    return handle_.Init.NonInvertingInput;
+    return handle_->Init.NonInvertingInput;
 }
 
 
 std::uint32_t User_comp::GetInvertingInput() const noexcept {
-    return handle_.Init.InvertingInput;
+    return handle_->Init.InvertingInput;
 }
 
 

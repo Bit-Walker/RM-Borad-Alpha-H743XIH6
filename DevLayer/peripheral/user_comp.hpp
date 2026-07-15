@@ -34,7 +34,7 @@ class User_comp {
      * @param  cb      中断触发回调。默认 nullptr 为轮询模式，非空则采用中断模式。
      * @param  arg     回调时透传的用户参数。
      */
-    explicit User_comp(const COMP_HandleTypeDef *handle,
+    explicit User_comp(COMP_HandleTypeDef *handle,
                        Callback cb  = nullptr,
                        void    *arg = nullptr) noexcept;
 
@@ -43,12 +43,12 @@ class User_comp {
      * @note   若构造时传入了回调则自动以中断模式启动，
      *         否则以轮询模式启动。
      */
-    void Start() noexcept;
+    void Start() const noexcept;
 
     /**
      * @brief  停止比较器。
      */
-    void Stop() noexcept;
+    void Stop() const noexcept;
 
     /**
      * @brief  读取比较器输出电平。
@@ -84,9 +84,9 @@ class User_comp {
 
 
   private:
-    COMP_HandleTypeDef handle_;                    ///< COMP HAL 句柄。
-    Callback           callback_     = nullptr;    ///< 中断触发回调。
-    void              *callback_arg_ = nullptr;    ///< 中断触发回调透传的用户参数。
+    COMP_HandleTypeDef *handle_;                    ///< COMP HAL 句柄指针。
+    Callback            callback_     = nullptr;    ///< 中断触发回调。
+    void               *callback_arg_ = nullptr;    ///< 中断触发回调透传的用户参数。
 
     /// @brief 由 HAL 回调分发的内部触发处理。
     void OnTrigger() const noexcept;

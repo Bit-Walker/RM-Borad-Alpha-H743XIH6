@@ -9,8 +9,8 @@
 
 
 /* 构造函数 --------------------------------------------------------------- */
-User_iwdg::User_iwdg(const IWDG_HandleTypeDef *const handle) noexcept
-    : handle_(*handle) {
+User_iwdg::User_iwdg(IWDG_HandleTypeDef *const handle) noexcept
+    : handle_(handle) {
 
     assert_param(handle != nullptr);
 }
@@ -18,33 +18,33 @@ User_iwdg::User_iwdg(const IWDG_HandleTypeDef *const handle) noexcept
 
 /* 成员方法 --------------------------------------------------------------- */
 void User_iwdg::Start() const noexcept {
-    __HAL_IWDG_START(&handle_);
+    __HAL_IWDG_START(handle_);
 }
 
 
 void User_iwdg::Refresh() const noexcept {
-    __HAL_IWDG_RELOAD_COUNTER(&handle_);
+    __HAL_IWDG_RELOAD_COUNTER(handle_);
 }
 
 
 std::uint32_t User_iwdg::GetPrescaler() const noexcept {
-    return handle_.Init.Prescaler;
+    return handle_->Init.Prescaler;
 }
 
 
 std::uint32_t User_iwdg::GetReload() const noexcept {
-    return handle_.Init.Reload;
+    return handle_->Init.Reload;
 }
 
 
 std::uint32_t User_iwdg::GetWindow() const noexcept {
-    return handle_.Init.Window;
+    return handle_->Init.Window;
 }
 
 
 std::uint32_t User_iwdg::GetTimeoutMs() const noexcept {
-    auto const prescaler = handle_.Init.Prescaler;
-    auto const reload    = handle_.Init.Reload;
+    auto const prescaler = handle_->Init.Prescaler;
+    auto const reload    = handle_->Init.Reload;
     auto const divider   = 4u << prescaler;
 
     return (divider * (reload + 1) * 1000u) / LSI_VALUE;
@@ -52,14 +52,14 @@ std::uint32_t User_iwdg::GetTimeoutMs() const noexcept {
 
 
 std::uint32_t User_iwdg::GetWindowMs() const noexcept {
-    auto const window = handle_.Init.Window;
+    auto const window = handle_->Init.Window;
 
     if (window == IWDG_WINDOW_DISABLE) {
         return 0;
     }
 
-    auto const prescaler = handle_.Init.Prescaler;
-    auto const reload    = handle_.Init.Reload;
+    auto const prescaler = handle_->Init.Prescaler;
+    auto const reload    = handle_->Init.Reload;
     auto const divider   = 4u << prescaler;
 
     return (divider * (reload - window + 1) * 1000u) / LSI_VALUE;
@@ -70,7 +70,7 @@ std::uint32_t User_iwdg::GetRefreshPeriodMs() const noexcept {
     auto const timeout_ms = GetTimeoutMs();
     std::uint32_t period_ms;
 
-    if (handle_.Init.Window == IWDG_WINDOW_DISABLE) {
+    if (handle_->Init.Window == IWDG_WINDOW_DISABLE) {
         period_ms = timeout_ms / USER_IWDG_REFRESH_MARGIN;
     } else {
         auto const window_ms = GetWindowMs();

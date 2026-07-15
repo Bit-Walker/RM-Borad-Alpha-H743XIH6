@@ -28,7 +28,7 @@ class User_crc {
      * @brief  用 CRC 句柄构造对象。
      * @param  handle  指向 CubeMX 生成的 CRC_HandleTypeDef 的指针。
      */
-    explicit User_crc(const CRC_HandleTypeDef *handle) noexcept;
+    explicit User_crc(CRC_HandleTypeDef *handle) noexcept;
 
     /**
      * @brief  单次计算 CRC。
@@ -37,7 +37,7 @@ class User_crc {
      * @return  CRC 计算结果。
      */
     [[nodiscard]] std::uint32_t Calculate(std::uint32_t pBuffer[],
-                                          std::uint32_t length) noexcept;
+                                          std::uint32_t length) const noexcept;
 
     /**
      * @brief  分块计算 CRC。
@@ -46,7 +46,7 @@ class User_crc {
      * @return  当前累加的 CRC 结果。
      */
     [[nodiscard]] std::uint32_t Accumulate(std::uint32_t pBuffer[],
-                                           std::uint32_t length) noexcept;
+                                           std::uint32_t length) const noexcept;
 
     /**
      * @brief  重置 CRC 数据寄存器。
@@ -79,7 +79,7 @@ class User_crc {
 
 
   private:
-    CRC_HandleTypeDef handle_;  ///< CRC HAL 句柄。
+    CRC_HandleTypeDef *handle_;  ///< CRC HAL 句柄指针。
 };
 
 

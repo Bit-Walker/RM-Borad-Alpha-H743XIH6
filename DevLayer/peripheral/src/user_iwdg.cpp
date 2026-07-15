@@ -4,6 +4,9 @@
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_IWDG_MODULE_ENABLED
 
+/* 宏定义 ---------------------------------------------------------------- */
+#define USER_IWDG_REFRESH_MARGIN 4U  ///< 无窗口看门狗的刷新时间与超时时间比。
+
 
 /* 构造函数 --------------------------------------------------------------- */
 User_iwdg::User_iwdg(const IWDG_HandleTypeDef *const handle) noexcept
@@ -65,13 +68,16 @@ std::uint32_t User_iwdg::GetWindowMs() const noexcept {
 
 std::uint32_t User_iwdg::GetRefreshPeriodMs() const noexcept {
     auto const timeout_ms = GetTimeoutMs();
+    std::uint32_t period_ms;
 
     if (handle_.Init.Window == IWDG_WINDOW_DISABLE) {
-        return timeout_ms / 4u;
+        period_ms = timeout_ms / USER_IWDG_REFRESH_MARGIN;
+    } else {
+        auto const window_ms = GetWindowMs();
+        period_ms = (timeout_ms + window_ms) / 2u;
     }
 
-    auto const window_ms = GetWindowMs();
-    return (timeout_ms + window_ms) / 2u;
+    return (period_ms < 1u) ? 1u : period_ms;
 }
 
 

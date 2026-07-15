@@ -73,6 +73,7 @@ bool User_comp::GetOutputLevel() const noexcept {
 
 void User_comp::SetCallbackArg(void *const arg) noexcept {
     assert_param(callback_ != nullptr);
+
     callback_arg_ = arg;
 }
 

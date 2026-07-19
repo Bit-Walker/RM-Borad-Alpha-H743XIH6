@@ -1,5 +1,5 @@
 /**
- * @file    shell_cmd_reg.c
+ * @file    cmd_reg.c
  * @brief   letter-shell 命令集中注册
  * @author  BitWalker
  * @version 1.0.0

@@ -1,5 +1,5 @@
 /**
- * @file    shell_cmd_typeof.cpp
+ * @file    cmd_typeof.cpp
  * @brief   打印 C++ 各种数据类型的内存占用
  * @author  BitWalker
  * @version 1.0.0
@@ -17,8 +17,6 @@
 #include <unordered_map>
 #include <set>
 #include <deque>
-#include <memory>
-#include <functional>
 
 
 #ifdef __cplusplus

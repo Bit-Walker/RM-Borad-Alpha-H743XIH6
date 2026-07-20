@@ -8,11 +8,14 @@
  * 
  */
 
-#include "../shell.h"
-#include "../shell_cfg.h"
+
 #include "string.h"
 #include "stdio.h"
 #include "stdarg.h"
+#include "cmsis_os2.h"
+
+#include "../shell.h"
+#include "../shell_cfg.h"
 #include "../shell_ext.h"
 
 
@@ -86,16 +89,19 @@ static const char *shellText[] =
 {
 #if SHELL_SHOW_INFO == 1
     [SHELL_TEXT_INFO] =
-        "\r\n"
-        " _         _   _                  _          _ _ \r\n"
-        "| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |\r\n"
-        "| |   / _ \\ __| __/ _ \\ '__| / __| '_ \\ / _ \\ | |\r\n"
-        "| |__|  __/ |_| ||  __/ |    \\__ \\ | | |  __/ | |\r\n"
-        "|_____\\___|\\__|\\__\\___|_|    |___/_| |_|\\___|_|_|\r\n"
-        "\r\n"
-        "Build:       "__DATE__" "__TIME__"\r\n"
-        "Version:     "SHELL_VERSION"\r\n"
-        "Copyright:   (c) 2020 Letter\r\n",
+        "                                                        \r\n"
+        "                                                        \r\n"
+        "                                                        \r\n"
+        " _         _   _                  _          _ _        \r\n"
+        "| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |       \r\n"
+        "| |   / _ \\ __| __/ _ \\ '__| / __| '_ \\ / _ \\ | |   \r\n"
+        "| |__|  __/ |_| ||  __/ |    \\__ \\ | | |  __/ | |     \r\n"
+        "|_____\\___|\\__|\\__\\___|_|    |___/_| |_|\\___|_|_|  \r\n"
+        "                                                        \r\n"
+        "Build:       "__DATE__" "__TIME__"                      \r\n"
+        "Version:     "SHELL_VERSION"                            \r\n"
+        "                                                        \r\n"
+        "KUST RoboMaster                                         \r\n",
 #endif
     [SHELL_TEXT_CMD_TOO_LONG] = 
         "\r\nWarning: Command is too long\r\n",
@@ -430,6 +436,12 @@ void shellScan(Shell *shell, char *fmt, ...)
                 shell->write(&buffer[index], 1);
                 index++;
             }
+#if SHELL_SCAN_DELAY_MS > 0
+            else
+            {
+                osDelay(pdMS_TO_TICKS(SHELL_SCAN_DELAY_MS));
+            }
+#endif
         } while (buffer[index -1] != '\r' && buffer[index -1] != '\n' && index < SHELL_SCAN_BUFFER);
         shellWriteString(shell, "\r\n");
         buffer[index] = '\0';

@@ -126,7 +126,7 @@
 /**
  * @brief 历史命令记录数量
  */
-#define     SHELL_HISTORY_MAX_NUMBER    5
+#define     SHELL_HISTORY_MAX_NUMBER    16
 #endif /** SHELL_HISTORY_MAX_NUMBER */
 
 #ifndef SHELL_DOUBLE_CLICK_TIME
@@ -134,7 +134,7 @@
  * @brief 双击间隔(ms)
  *        使能宏`SHELL_LONG_HELP`后此宏生效，定义双击tab补全help的时间间隔
  */
-#define     SHELL_DOUBLE_CLICK_TIME     200
+#define     SHELL_DOUBLE_CLICK_TIME     300
 #endif /** SHELL_DOUBLE_CLICK_TIME */
 
 #ifndef SHELL_QUICK_HELP
@@ -158,7 +158,7 @@
 /**
  * @brief 管理的最大shell数量
  */
-#define     SHELL_MAX_NUMBER            5
+#define     SHELL_MAX_NUMBER            3
 #endif /** SHELL_MAX_NUMBER */
 
 #ifndef SHELL_PRINT_BUFFER
@@ -169,18 +169,27 @@
 #define     SHELL_PRINT_BUFFER          256
 #endif /** SHELL_PRINT_BUFFER */
 
+#ifndef SHELL_SCAN_DELAY_MS
+/**
+ * @brief shell格式化输入时让出 CPU 的时间 单位：ms
+ *        使能后，shellScan在等待输入时会调用 osDelay(pdMS_TO_TICKS(5))
+ *        避免忙等空转，仅在FreeRTOS环境下有效
+ */
+#define     SHELL_SCAN_DELAY_MS      5
+#endif /** SHELL_SCAN_DELAY_MS */
+
 #ifndef SHELL_SCAN_BUFFER
 /**
  * @brief shell格式化输入的缓冲大小
  *        为0时不使用shell格式化输入
  * @note shell格式化输入会阻塞shellTask, 仅适用于在有操作系统的情况下使用
  */
-#define     SHELL_SCAN_BUFFER          0
+#define     SHELL_SCAN_BUFFER          256
 #endif /** SHELL_SCAN_BUFFER */
 
 #ifndef SHELL_GET_TICK
 /**
- * @brief 获取系统时间(ms)
+ * @brief 获取系统时间 单位：ms
  *        定义此宏为获取系统Tick，如`HAL_GetTick()`
  * @note 此宏不定义时无法使用双击tab补全命令help，无法使用shell超时锁定
  */

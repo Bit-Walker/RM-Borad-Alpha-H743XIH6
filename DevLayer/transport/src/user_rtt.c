@@ -1,6 +1,6 @@
 /* 头文件 ---------------------------------------------------------------- */
 #include "memory/memory_segmentation.h"
-#include "../user_segger_rtt.h"
+#include "../user_rtt.h"
 #include <string.h>
 #include <stdio.h>
 

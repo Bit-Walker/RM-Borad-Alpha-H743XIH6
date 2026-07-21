@@ -12,7 +12,6 @@
 #include "string.h"
 #include "stdio.h"
 #include "stdarg.h"
-#include "cmsis_os2.h"
 
 #include "../shell.h"
 #include "../shell_cfg.h"
@@ -435,10 +434,10 @@ void shellScan(Shell *shell, char *fmt, ...)
                 shell->write(&buffer[index], 1);
                 index++;
             }
-#if SHELL_SCAN_DELAY_MS > 0
+#if SHELL_SCAN_YIELD_ENABLE > 0
             else
             {
-                osDelay(pdMS_TO_TICKS(SHELL_SCAN_DELAY_MS));
+                taskYIELD();
             }
 #endif
         } while (buffer[index -1] != '\r' && buffer[index -1] != '\n' && index < SHELL_SCAN_BUFFER);

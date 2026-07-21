@@ -1,5 +1,5 @@
-#ifndef USER_SEGGER_RTT_H
-#define USER_SEGGER_RTT_H
+#ifndef USER_RTT_H
+#define USER_RTT_H
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,4 +43,4 @@ int32_t RTT_Scanf(uint8_t index, const char *format, ...);
 #ifdef __cplusplus
 }
 #endif
-#endif
+#endif /* USER_RTT_H */

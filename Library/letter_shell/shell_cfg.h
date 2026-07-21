@@ -169,14 +169,14 @@
 #define     SHELL_PRINT_BUFFER          256
 #endif /** SHELL_PRINT_BUFFER */
 
-#ifndef SHELL_SCAN_DELAY_MS
+#ifndef SHELL_SCAN_YIELD_ENABLE
 /**
  * @brief shell格式化输入时让出 CPU 的时间 单位：ms
- *        使能后，shellScan 在等待输入时会调用 osDelay(pdMS_TO_TICKS(5))
+ *        使能后，shellScan 在等待输入时会
  *        避免忙等空转，仅在 FreeRTOS 环境下有效
  */
-#define     SHELL_SCAN_DELAY_MS      5
-#endif /** SHELL_SCAN_DELAY_MS */
+#define     SHELL_SCAN_YIELD_ENABLE     1
+#endif /** SHELL_SCAN_YIELD_ENABLE */
 
 #ifndef SHELL_SCAN_BUFFER
 /**

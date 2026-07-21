@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "transport/user_segger_rtt.h"
+#include "transport/user_rtt.h"
 
 /* USER CODE END Includes */
 

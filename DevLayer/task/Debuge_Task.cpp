@@ -2,7 +2,7 @@
 #include "FreeRTOS.h"
 #include "cmsis_os2.h"
 #include "bsp_register.h"
-#include "transport/user_segger_rtt.h"
+#include "transport/user_rtt.h"
 #include "../shell/shell_port.h"
 
 

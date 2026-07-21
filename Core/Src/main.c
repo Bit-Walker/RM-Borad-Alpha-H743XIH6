@@ -23,7 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#ifdef DEBUG
 #include "transport/user_rtt.h"
+#endif
 
 /* USER CODE END Includes */
 
@@ -132,6 +134,11 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+
+  /* Enable ITCM */
+  SCB->ITCMCR |= SCB_ITCMCR_EN_Msk | SCB_ITCMCR_RETEN_Msk;
+  __DSB();
+  __ISB();
 
   /* USER CODE END Init */
 
@@ -1120,7 +1127,9 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
   ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+#ifdef DEBUG
   SEGGER_RTT_printf(0, "[ASSERT] Wrong parameters value: file %s on line %d\r\n", file, line);
+#endif
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

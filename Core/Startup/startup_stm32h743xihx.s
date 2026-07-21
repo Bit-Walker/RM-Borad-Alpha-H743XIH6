@@ -99,6 +99,25 @@ LoopCopyITCM:
   cmp r4, r1
   bcc CopyITCM
 
+/* Copy vector table from FLASH to ITCMRAM */
+  ldr r0, =0x00000000
+  ldr r1, =_evector
+  ldr r2, =_svector
+  sub r1, r1, r2
+  add r1, r0, r1
+  movs r3, #0
+  b   LoopCopyVecCheck
+
+CopyVec:
+  ldr r4, [r2, r3]
+  str r4, [r0, r3]
+  adds r3, r3, #4
+
+LoopCopyVecCheck:
+  adds r4, r0, r3
+  cmp r4, r1
+  bcc CopyVec
+
 /* Copy DTCM section initializers from FLASH to DTCMRAM */
   ldr r0, =_sdtcmram
   ldr r1, =_edtcmram

@@ -58,7 +58,9 @@ SECTIONS
   .isr_vector :
   {
     . = ALIGN(4);
+    _svector = .;        /* start of vector table in FLASH */
     KEEP(*(.isr_vector)) /* Startup code */
+    _evector = .;        /* end of vector table in FLASH */
     . = ALIGN(4);
   } >FLASH
 
@@ -137,6 +139,7 @@ SECTIONS
   .itcmram :
   {
     . = ALIGN(4);
+    . = . + 0x400;       /* Reserve 1KB for vector table */
     _sitcmram = .;       /* VMA start of ITCM section */
     *(.itcmram)          /* code/data explicitly placed in ITCM */
     *(.itcmram*)         /* code/data explicitly placed in ITCM */

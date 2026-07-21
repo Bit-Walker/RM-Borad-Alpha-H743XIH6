@@ -9,7 +9,7 @@ $CmdFile = Join-Path $env:TEMP "jlink_rtt_telnet.jlink"
 @"
 device STM32H743XI
 si SWD
-speed 4000
+speed 6000
 SetRTTTelnetPort $Port
 r
 exec SetRTTSearchRanges 0x30000000 0x10000

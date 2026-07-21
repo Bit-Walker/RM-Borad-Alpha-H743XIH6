@@ -51,6 +51,11 @@ add_definitions(${defines})
 
 file(GLOB_RECURSE SOURCES ${sources})
 
+# 此处排除掉 Library 目录下的文件，改为由 Library/CMakeLists.txt 独立控制。
+list(FILTER SOURCES EXCLUDE REGEX "/Library/")
+include(Library/CMakeLists.txt)
+
+
 set(LINKER_SCRIPT $${CMAKE_SOURCE_DIR}/${linkerScript})
 
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=$${PROJECT_BINARY_DIR}/$${PROJECT_NAME}.map)

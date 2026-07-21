@@ -1,5 +1,5 @@
 #include "../shell_port.h"
-#include "SEGGER_RTT/SEGGER_RTT.h"
+#include "SEGGER_RTT.h"
 
 
 /* 全局变量 --------------------------------------------------------------- */

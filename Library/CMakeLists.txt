@@ -1,0 +1,18 @@
+
+option(LIBRARY_CMSIS_DSP    "CMSIS-DSP library"          OFF)
+option(LIBRARY_CMSIS_NN     "CMSIS-NN library"           OFF)
+option(LIBRARY_LETTER_SHELL "Letter Shell command line"  ON)
+option(LIBRARY_SEGGER_RTT   "SEGGER RTT debug output"    ON)
+
+if(LIBRARY_CMSIS_DSP)
+    include(Library/DSP/dsp.cmake)
+endif()
+if(LIBRARY_CMSIS_NN)
+    include(Library/NN/nn.cmake)
+endif()
+if(LIBRARY_LETTER_SHELL)
+    include(Library/letter_shell/shell.cmake)
+endif()
+if(LIBRARY_SEGGER_RTT)
+    include(Library/SEGGER_RTT/rtt.cmake)
+endif()

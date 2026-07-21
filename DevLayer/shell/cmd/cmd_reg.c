@@ -19,6 +19,6 @@ SHELL_EXPORT_CMD(
     SHELL_CMD_DISABLE_RETURN,
     typeof,
     shellTypeof,
-    print sizeof of C++ data types
+    print sizeof of data types
 );
 

@@ -46,11 +46,16 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-include_directories(Core/Inc Drivers/STM32H7xx_HAL_Driver/Inc Drivers/STM32H7xx_HAL_Driver/Inc/Legacy Middlewares/Third_Party/FreeRTOS/Source/include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F Drivers/CMSIS/RTOS2/Include Drivers/CMSIS/Device/ST/STM32H7xx/Include Drivers/CMSIS/Include Drivers/CMSIS/DSP/Include Drivers/CMSIS/DSP/PrivateInclude Drivers/CMSIS/ComputeLibrary/Include Drivers/CMSIS/NN/Include DevLayer Library BSP)
+include_directories(Core/Inc Drivers/STM32H7xx_HAL_Driver/Inc Drivers/STM32H7xx_HAL_Driver/Inc/Legacy Middlewares/Third_Party/FreeRTOS/Source/include Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F Drivers/CMSIS/RTOS2/Include Drivers/CMSIS/Device/ST/STM32H7xx/Include Drivers/CMSIS/Include DevLayer BSP Library/DSP/Include Library/DSP/PrivateInclude Library/letter_shell Library/SEGGER_RTT Library/NN/Include Library/DSP/ComputeLibrary/Include)
 
 add_definitions(-DDEBUG -DUSE_HAL_DRIVER -DSTM32H743xx -DARM_MATH_CM7 -DARM_MATH_MATRIX_CHECK -DARM_MATH_ROUNDING -DUSE_PWR_LDO_SUPPLY)
 
 file(GLOB_RECURSE SOURCES "BSP/*.*" "Library/*.*" "Core/*.*" "Middlewares/*.*" "DevLayer/*.*" "Drivers/*.*")
+
+# 此处排除掉 Library 目录下的文件，改为由 Library/CMakeLists.txt 独立控制。
+list(FILTER SOURCES EXCLUDE REGEX "/Library/")
+include(Library/CMakeLists.txt)
+
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32H743XIHX_FLASH.ld)
 

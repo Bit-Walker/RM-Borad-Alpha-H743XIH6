@@ -75,8 +75,8 @@ const osThreadAttr_t IWDG_Task_attributes = {
 osThreadId_t Shell_TaskHandle;
 const osThreadAttr_t Shell_Task_attributes = {
   .name = "Shell_Task",
-  .stack_size = 512 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 1024 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal,
 };
 /* USER CODE BEGIN PV */
 

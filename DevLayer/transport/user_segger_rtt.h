@@ -6,8 +6,8 @@ extern "C" {
 
 
 /* 头文件 ---------------------------------------------------------------- */
-#include "SEGGER_RTT/SEGGER_RTT.h"
-#include "SEGGER_RTT/SEGGER_RTT_Conf.h"
+#include "SEGGER_RTT.h"
+#include "SEGGER_RTT_Conf.h"
 
 
 /* 宏定义 ---------------------------------------------------------------- */

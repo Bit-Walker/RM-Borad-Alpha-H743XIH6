@@ -15,7 +15,23 @@ static signed short shellWriteRtt(char *data, unsigned short len)
 
 static signed short shellReadRtt(char *data, unsigned short len)
 {
-    const unsigned int n = SEGGER_RTT_Read(0, data, (unsigned)len);
+    unsigned int n = SEGGER_RTT_Read(0, data, (unsigned)len);
+
+    static uint8_t last_char_is_ff = 0;
+
+    if (n == len) {
+        if (last_char_is_ff && data[0] =='\x0b') {
+            n = 0;
+        }
+
+        if (data[0] =='\xff') {
+            last_char_is_ff = 1;
+            n = 0;
+        } else {
+            last_char_is_ff = 0;
+        }
+    }
+
     return (signed short)n;
 }
 

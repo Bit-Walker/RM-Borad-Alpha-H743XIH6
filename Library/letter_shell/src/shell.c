@@ -14,6 +14,7 @@
 #include "stdarg.h"
 
 #include "../shell.h"
+#include "cmsis_os2.h"
 #include "../shell_cfg.h"
 #include "../shell_ext.h"
 
@@ -89,17 +90,23 @@ static const char *shellText[] =
 #if SHELL_SHOW_INFO == 1
     [SHELL_TEXT_INFO] =
         "                                                        \r\n"
+        "\033[97m                                                \r\n"
+        "    ____            __                                  \r\n"
+        "   / __ \\  ____    / /_    ____                        \r\n"
+        "  / /_/ / / __ \\  / __ \\  / __ \\                     \r\n"
+        " / _  _/ / /_/ / / /_/ / / /_/ /                        \r\n"
+        "/_/ |_|  \\____/ /_____/  \\____/                       \r\n"
+        "    __   ___                   __                       \r\n"
+        "   /  | /  /  ____ _   _____  / /_  ___    ____         \r\n"
+        "  / /|_// /  / __ \\/  / ___/ / __/ / _ \\  / __/       \r\n"
+        " / /   / /  / /_/ /  /__  / / /_  /  __/ / /            \r\n"
+        "/_/   /_/   \\__,_/  /____/  \\__/  \\___/ /_/          \r\n"
         "                                                        \r\n"
-        " _         _   _                  _          _ _        \r\n"
-        "| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |       \r\n"
-        "| |   / _ \\ __| __/ _ \\ '__| / __| '_ \\ / _ \\ | |   \r\n"
-        "| |__|  __/ |_| ||  __/ |    \\__ \\ | | |  __/ | |     \r\n"
-        "|_____\\___|\\__|\\__\\___|_|    |___/_| |_|\\___|_|_|  \r\n"
-        "                                                        \r\n"
+        "\033[0m                                                 \r\n"
         "Build:       "__DATE__" "__TIME__"                      \r\n"
         "Version:     "SHELL_VERSION"                            \r\n"
-        "                                                        \r\n"
-        "KUST RoboMaster                                         \r\n",
+        "\033[97m                                                \r\n"
+        "KUST RoboMaster \033[0m                                 \r\n",
 #endif
     [SHELL_TEXT_CMD_TOO_LONG] = 
         "\r\nWarning: Command is too long\r\n",
@@ -434,10 +441,10 @@ void shellScan(Shell *shell, char *fmt, ...)
                 shell->write(&buffer[index], 1);
                 index++;
             }
-#if SHELL_SCAN_YIELD_ENABLE > 0
+#if SHELL_SCAN_YIELD_MS > 0
             else
             {
-                taskYIELD();
+                osDelay(pdMS_TO_TICKS(SHELL_SCAN_YIELD_MS));
             }
 #endif
         } while (buffer[index -1] != '\r' && buffer[index -1] != '\n' && index < SHELL_SCAN_BUFFER);

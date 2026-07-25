@@ -169,14 +169,14 @@
 #define     SHELL_PRINT_BUFFER          256
 #endif /** SHELL_PRINT_BUFFER */
 
-#ifndef SHELL_SCAN_YIELD_ENABLE
+#ifndef SHELL_SCAN_YIELD_MS
 /**
- * @brief shell格式化输入时让出 CPU 的时间 单位：ms
- *        使能后，shellScan 在等待输入时会
+ * @brief shell 格式化输入时让出 CPU 的时间 单位：ms
+ *        使能后，shellScan 在等待输入时会让出 CPU
  *        避免忙等空转，仅在 FreeRTOS 环境下有效
  */
-#define     SHELL_SCAN_YIELD_ENABLE     1
-#endif /** SHELL_SCAN_YIELD_ENABLE */
+#define     SHELL_SCAN_YIELD_MS     9
+#endif /** SHELL_SCAN_YIELD_MS */
 
 #ifndef SHELL_SCAN_BUFFER
 /**

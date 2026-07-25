@@ -527,6 +527,7 @@ typedef struct
 void shellInit(Shell *shell, char *buffer, unsigned short size);
 void shellRemove(Shell *shell);
 unsigned short shellWriteString(Shell *shell, const char *string);
+void shellClear(void);
 void shellPrint(Shell *shell, const char *fmt, ...);
 void shellScan(Shell *shell, char *fmt, ...);
 Shell* shellGetCurrent(void);

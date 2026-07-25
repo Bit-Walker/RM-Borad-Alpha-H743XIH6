@@ -136,18 +136,20 @@ SECTIONS
   } >FLASH
 
   /* --- Custom section for time-critical code placed in ITCM RAM --- */
+  _itcm_padding = 0x400;            /* 1 KB reserved at ITCM base for vector table */
+
   .itcmram :
   {
     . = ALIGN(4);
-    . = . + 0x400;       /* Reserve 1KB for vector table */
-    _sitcmram = .;       /* VMA start of ITCM section */
-    *(.itcmram)          /* code/data explicitly placed in ITCM */
-    *(.itcmram*)         /* code/data explicitly placed in ITCM */
+    . = . + _itcm_padding;          /* Reserve 1KB for vector table */
+    _sitcmram = .;                  /* VMA: ITCM code/data start */
+    *(.itcmram)
+    *(.itcmram*)
     . = ALIGN(4);
-    _eitcmram = .;       /* VMA end of ITCM section */
+    _eitcmram = .;                  /* VMA: ITCM code/data end */
   } >ITCMRAM AT> FLASH
 
-  _siitcmram = LOADADDR(.itcmram);  /* LMA of ITCM section in FLASH */
+  _siitcmram = LOADADDR(.itcmram) + _itcm_padding;     /* LMA: code/data in FLASH */
 
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);

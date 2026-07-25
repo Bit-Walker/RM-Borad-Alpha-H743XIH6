@@ -12,6 +12,7 @@
 
 /* ---- typeof -------------------------------------------------------------- */
 extern int shellTypeof(int argc, char *argv[]);
+extern int shellDebug(int argc, char *argv[]);
 
 SHELL_EXPORT_CMD(
     SHELL_CMD_PERMISSION(0) |
@@ -22,3 +23,11 @@ SHELL_EXPORT_CMD(
     print sizeof of data types
 );
 
+SHELL_EXPORT_CMD(
+    SHELL_CMD_PERMISSION(0) |
+    SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN) |
+    SHELL_CMD_DISABLE_RETURN,
+    debug,
+    shellDebug,
+    help user debug new features
+);

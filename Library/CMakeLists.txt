@@ -1,8 +1,9 @@
 
-option(LIBRARY_CMSIS_DSP    "CMSIS-DSP library"          OFF)
+option(LIBRARY_CMSIS_DSP    "CMSIS-DSP library"          ON)
 option(LIBRARY_CMSIS_NN     "CMSIS-NN library"           OFF)
 option(LIBRARY_LETTER_SHELL "Letter Shell command line"  ON)
 option(LIBRARY_SEGGER_RTT   "SEGGER RTT debug output"    ON)
+option(LIBRARY_MAGIC_ENUM   "Magic enum library"         OFF)
 
 if(LIBRARY_CMSIS_DSP)
     include(Library/DSP/dsp.cmake)
@@ -16,3 +17,6 @@ endif()
 if(LIBRARY_SEGGER_RTT)
     include(Library/SEGGER_RTT/rtt.cmake)
 endif()
+if (LIBRARY_MAGIC_ENUM)
+    include(Library/magic_enum/magic_enum.cmake)
+endif ()

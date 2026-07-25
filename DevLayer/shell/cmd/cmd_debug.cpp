@@ -11,7 +11,6 @@
 #include "shell.h"
 #include "memory/memory_seg.h"
 #include "peripheral/User_DWT.hpp"
-#include <string>
 #include "dsp/fast_math_functions.h"
 
 

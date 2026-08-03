@@ -57,7 +57,7 @@ osThreadId_t StateLED_TaskHandle;
 const osThreadAttr_t StateLED_Task_attributes = {
   .name = "StateLED_Task",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityLow,
+  .priority = (osPriority_t) osPriorityBelowNormal,
 };
 /* Definitions for Debug_Task */
 osThreadId_t Debug_TaskHandle;

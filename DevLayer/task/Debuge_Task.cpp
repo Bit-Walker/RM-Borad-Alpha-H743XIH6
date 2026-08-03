@@ -9,9 +9,7 @@
 extern "C" {
 [[noreturn]]
     void Test_Template(void) {
-
         while (true) {
-
             osDelay(pdMS_TO_TICKS(1000));
         }
     }
@@ -58,6 +56,22 @@ extern "C" {
         }
         while (true) {
             osDelay(pdMS_TO_TICKS(100));
+        }
+    }
+}
+#endif
+
+
+#ifdef HAL_RNG_MODULE_ENABLED
+extern "C" {
+[[noreturn]]
+    void Test_RNG(void) {
+        while (true) {
+            osDelay(pdMS_TO_TICKS(1000));
+            float random = 0.0f;
+            if (hardware_rng.GetRandFloat(&random,10,1)) {
+                RTT_Printf(0, "%f ", random);
+            }
         }
     }
 }

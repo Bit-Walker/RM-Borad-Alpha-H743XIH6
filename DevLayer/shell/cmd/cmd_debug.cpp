@@ -2,12 +2,11 @@
  * @file    cmd_debug.cpp
  * @brief   便于在终端调试新功能的命令
  * @author  BitWalker
- * @version 1.0.0
+ * @version 2.0.0
  * @date    2026-07-19
  *
  */
 
-#include "shell/shell_port.h"
 #include "shell.h"
 #include "memory/memory_seg.h"
 #include "peripheral/User_DWT.hpp"
@@ -40,7 +39,7 @@ ITCMRAM int shellDebug(int argc, char *argv[])
 
     /* 终端输入段 ---------------------------------------------------------- */
 
-    float input_num {0.0};
+    float input_num  {0.0};
     volatile float output_num {0.0};
 
     shellPrint(s, "input_num = ");
@@ -61,44 +60,122 @@ ITCMRAM int shellDebug(int argc, char *argv[])
 
     /* 性能统计段 ---------------------------------------------------------- */
 
-    uint32_t counter     {0};
-    uint64_t counter_sum {0};
+    uint32_t temp_cnt {0};
+
+    int64_t counter_cyc {0};
+    int64_t counter_cpi {0};
+    int64_t counter_lsu {0};
+    int64_t counter_fld {0};
+
+
+    __asm__("nop");
+    __asm__("nop");
+    __asm__("nop");
+    SHELL_DEBUG_PROCESS
+    __asm__("nop");
+    __asm__("nop");
+    __asm__("nop");
+
 
     for (int i = 0; i < TEST_HALF_NUM; i++) {
         #ifdef DISABLE_IRQ
         __disable_irq();
         #endif
-        User_DWT::Clear();
 
-        __asm__("nop");
+        DWT->CYCCNT = 0;
+        __asm__("isb");
         SHELL_DEBUG_PROCESS
-        __asm__("nop");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->CYCCNT;
+        counter_cyc += temp_cnt;
 
-        counter = User_DWT::GetCounter();
+        DWT->CYCCNT = 0;
+        __asm__("isb");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->CYCCNT;
+
+        if (temp_cnt < counter_cyc) {
+            counter_cyc -= temp_cnt;
+        }else {
+            counter_cyc = 0;
+        }
+
+        DWT->CPICNT = 0;
+        __asm__("isb");
+        SHELL_DEBUG_PROCESS
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->CPICNT;
+        counter_cpi += temp_cnt;
+
+        DWT->CPICNT = 0;
+        __asm__("isb");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->CPICNT;
+
+        if (temp_cnt < counter_cpi) {
+            counter_cpi -= temp_cnt;
+        }else {
+            counter_cpi = 0;
+        }
+
         #ifdef DISABLE_IRQ
         __enable_irq();
         #endif
-        counter_sum += counter;
-        __asm__("nop");
-        __asm__("nop");
         __asm__("nop");
         __asm__("nop");
         __asm__("nop");
         #ifdef DISABLE_IRQ
         __disable_irq();
         #endif
-        User_DWT::Clear();
 
-        __asm__("nop");
+        DWT->LSUCNT = 0;
+        __asm__("isb");
         SHELL_DEBUG_PROCESS
-        __asm__("nop");
-        __asm__("nop");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->LSUCNT;
+        counter_lsu += temp_cnt;
 
-        counter = User_DWT::GetCounter();
+        DWT->LSUCNT = 0;
+        __asm__("isb");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->LSUCNT;
+
+        if (temp_cnt < counter_lsu) {
+            counter_lsu -= temp_cnt;
+        }else {
+            counter_lsu = 0;
+        }
+
+        DWT->FOLDCNT = 0;
+        __asm__("isb");
+        SHELL_DEBUG_PROCESS
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->FOLDCNT;
+        counter_fld += temp_cnt;
+
+        DWT->FOLDCNT = 0;
+        __asm__("isb");
+        __asm__("dsb");
+        __asm__("isb");
+        temp_cnt = DWT->FOLDCNT;
+
+        if (temp_cnt < counter_fld) {
+            counter_fld -= temp_cnt;
+        }else {
+            counter_fld = 0;
+        }
+
         #ifdef DISABLE_IRQ
         __enable_irq();
         #endif
-        counter_sum += counter;
+        __asm__("nop");
         __asm__("nop");
         __asm__("nop");
         __asm__("nop");
@@ -120,19 +197,40 @@ ITCMRAM int shellDebug(int argc, char *argv[])
     constexpr double test_num = 2.0 * TEST_HALF_NUM;
 
     //NOLINTNEXTLINE
-    const float ns = static_cast<float>(static_cast<double>(counter_sum) / test_num *
+    const float ns = static_cast<float>(static_cast<double>(counter_cyc) / test_num *
         1000000000.0 / static_cast<double>(HAL_RCC_GetSysClockFreq()));
 
     //NOLINTNEXTLINE
-    const float us = static_cast<float>(static_cast<double>(counter_sum) / test_num *
+    const float us = static_cast<float>(static_cast<double>(counter_cyc) / test_num *
         1000000.0 / static_cast<double>(HAL_RCC_GetSysClockFreq()));
 
     //NOLINTNEXTLINE
-    const float ms = static_cast<float>(static_cast<double>(counter_sum) / test_num *
+    const float ms = static_cast<float>(static_cast<double>(counter_cyc) / test_num *
         1000.0 / static_cast<double>(HAL_RCC_GetSysClockFreq()));
 
+
+    // 处理器实际运行的时钟周期数
+    shellPrint(s, "时钟周期：%.1f   \r\n",
+        static_cast<float>(static_cast<double>(counter_cyc) / test_num));
+
+    // 执行多周期指令和指令提取停顿所需的额外周期数
+    shellPrint(s, "额外周期：%.1f   \r\n",
+        static_cast<float>(static_cast<double>(counter_cpi) / test_num));
+
+    // 执行加载或存储指令所需的额外周期数
+    shellPrint(s, "访存周期：%.1f   \r\n",
+        static_cast<float>(static_cast<double>(counter_lsu) / test_num));
+
+    // 消耗时钟周期为零的指令数
+    shellPrint(s, "折叠周期：%.1f   \r\n",
+        static_cast<float>(static_cast<double>(counter_fld) / test_num));
+
+    // 指令数
+    auto inst_cyc = counter_cyc + counter_fld - counter_cpi - counter_lsu;
+    shellPrint(s, "总指令数：%.1f   \r\n",
+        static_cast<float>(static_cast<double>(inst_cyc) * 2.0 / test_num));
+
     shellPrint(s, "核心频率：%d MHz \r\n", HAL_RCC_GetSysClockFreq() / 1000000ULL);
-    shellPrint(s, "时钟周期：%.1f   \r\n", static_cast<float>(static_cast<double>(counter_sum) / test_num));
     shellPrint(s, "测试耗时：%.3f ns\r\n", ns);
     shellPrint(s, "测试耗时：%.6f us\r\n", us);
     shellPrint(s, "等效频率：%.3f MHz\r\n", 1.0f / us);

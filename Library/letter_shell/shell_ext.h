@@ -15,6 +15,9 @@
 #include "shell.h"
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @brief 数字类型
@@ -45,5 +48,9 @@ int shellExtCleanerPara(Shell *shell, char *type, size_t param);
 int shellGetArrayParamSize(void *param);
 #endif /** SHELL_SUPPORT_ARRAY_PARAM == 1 */
 int shellExtRun(Shell *shell, ShellCommand *command, int argc, char *argv[]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

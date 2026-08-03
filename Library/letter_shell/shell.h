@@ -14,6 +14,10 @@
 
 #include "shell_cfg.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define     SHELL_VERSION               "3.2.4"                 /**< 版本号 */
 
 
@@ -553,6 +557,10 @@ typedef struct shell_companion_object
 signed char shellCompanionAdd(Shell *shell, int id, void *object);
 signed char shellCompanionDel(Shell *shell, int id);
 void *shellCompanionGet(Shell *shell, int id);
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif

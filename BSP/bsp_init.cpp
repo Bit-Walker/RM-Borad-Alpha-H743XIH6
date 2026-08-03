@@ -34,5 +34,39 @@ User_CRC hardware_crc(&hcrc);
 extern "C" {
     void bsp_Init() {
 
+#ifdef DEBUG
+        __HAL_DBGMCU_FREEZE_WWDG1();
+
+        __HAL_DBGMCU_FREEZE_TIM2();
+        __HAL_DBGMCU_FREEZE_TIM3();
+        __HAL_DBGMCU_FREEZE_TIM4();
+        __HAL_DBGMCU_FREEZE_TIM5();
+        __HAL_DBGMCU_FREEZE_TIM6();
+        __HAL_DBGMCU_FREEZE_TIM7();
+        __HAL_DBGMCU_FREEZE_TIM12();
+        __HAL_DBGMCU_FREEZE_TIM13();
+        __HAL_DBGMCU_FREEZE_TIM14();
+        __HAL_DBGMCU_FREEZE_LPTIM1();
+        __HAL_DBGMCU_FREEZE_I2C1();
+        __HAL_DBGMCU_FREEZE_I2C2();
+        __HAL_DBGMCU_FREEZE_I2C3();
+
+        __HAL_DBGMCU_FREEZE_FDCAN();
+
+        __HAL_DBGMCU_FREEZE_TIM1();
+        __HAL_DBGMCU_FREEZE_TIM8();
+        __HAL_DBGMCU_FREEZE_TIM15();
+        __HAL_DBGMCU_FREEZE_TIM16();
+        __HAL_DBGMCU_FREEZE_TIM17();
+        __HAL_DBGMCU_FREEZE_HRTIM();
+
+        __HAL_DBGMCU_FREEZE_I2C4();
+        __HAL_DBGMCU_FREEZE_LPTIM2();
+        __HAL_DBGMCU_FREEZE_LPTIM3();
+        __HAL_DBGMCU_FREEZE_LPTIM4();
+        __HAL_DBGMCU_FREEZE_LPTIM5();
+        __HAL_DBGMCU_FREEZE_RTC();
+        __HAL_DBGMCU_FREEZE_IWDG1();
+#endif
     }
 }

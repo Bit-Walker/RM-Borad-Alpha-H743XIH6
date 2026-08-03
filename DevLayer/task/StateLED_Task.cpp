@@ -11,8 +11,13 @@ extern "C" {
 [[noreturn]]
     void Start_StateLED_Toggle(void *argument) {
         while (true) {
-            state_led.Toggle();
-            osDelay(pdMS_TO_TICKS(1000));
+            if (dwt.IsDbgConnected()) {
+                state_led.Toggle();
+                osDelay(pdMS_TO_TICKS(1500));
+            } else {
+                state_led.Toggle();
+                osDelay(pdMS_TO_TICKS(500));
+            }
         }
     }
 }

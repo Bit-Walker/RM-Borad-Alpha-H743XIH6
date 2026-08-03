@@ -1,5 +1,5 @@
 /**
- * @file    user_comp.hpp
+ * @file    User_COMP.hpp
  * @brief   模拟比较器抽象层。
  * @author  BitWalker
  * @version 1.0.0
@@ -20,6 +20,10 @@
 
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_COMP_MODULE_ENABLED
+
+
+/* 宏定义 ---------------------------------------------------------------- */
+#define USER_COMP_MAX_INSTANCES 2U  ///< 最大 COMP 实例数。
 
 
 /* 类定义 ---------------------------------------------------------------- */
@@ -64,15 +68,6 @@ class User_COMP {
      */
     void SetCallbackArg(void *arg) noexcept;
 
-    /// @brief 获取功耗模式。
-    [[nodiscard]] std::uint32_t GetMode() const noexcept;
-
-    /// @brief 获取同相输入端配置。
-    [[nodiscard]] std::uint32_t GetNonInvertingInput() const noexcept;
-
-    /// @brief 获取反相输入端配置。
-    [[nodiscard]] std::uint32_t GetInvertingInput() const noexcept;
-
 
     User_COMP(User_COMP const &)            = delete;
     User_COMP &operator=(User_COMP const &) = delete;
@@ -84,9 +79,12 @@ class User_COMP {
 
 
   private:
-    COMP_HandleTypeDef *handle_;                    ///< COMP HAL 句柄指针。
-    Callback            callback_     = nullptr;    ///< 中断触发回调。
-    void               *callback_arg_ = nullptr;    ///< 中断触发回调透传的用户参数。
+    COMP_HandleTypeDef *handle_;                  ///< COMP HAL 句柄指针。
+    Callback            callback_     = nullptr;  ///< 中断触发回调。
+    void               *callback_arg_ = nullptr;  ///< 中断触发回调透传的用户参数。
+
+    inline static User_COMP *comp_instances_[USER_COMP_MAX_INSTANCES] = {};
+    inline static uint32_t   comp_count_ {0};
 
     /// @brief 由 HAL 回调分发的内部触发处理。
     void OnTrigger() const noexcept;

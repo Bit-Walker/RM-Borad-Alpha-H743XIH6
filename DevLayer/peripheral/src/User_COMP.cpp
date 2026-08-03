@@ -4,21 +4,13 @@
 /* 条件编译 --------------------------------------------------------------- */
 #ifdef HAL_COMP_MODULE_ENABLED
 
-/* 宏定义 ---------------------------------------------------------------- */
-#define USER_COMP_MAX_INSTANCES 2U
-
-/* 命名空间 --------------------------------------------------------------- */
-namespace {
-    User_COMP    *comp_instances[USER_COMP_MAX_INSTANCES] = {};
-    std::uint32_t comp_count = 0;
-}
-
 
 /* 中断分发 --------------------------------------------------------------- */
-/// @brief 覆写 HAL 弱回调，分派到对应的 User_comp 实例。
+/// @brief 覆写 HAL 回调，分派到对应的 User_comp 实例。
+// NOLINTNEXTLINE
 extern "C" void HAL_COMP_TriggerCallback(COMP_HandleTypeDef *hcomp) {
-    for (std::uint32_t i = 0; i < comp_count; i++) {
-        if (const auto *const self = comp_instances[i]) {
+    for (uint32_t i = 0; i < User_COMP::comp_count_; i++) {
+        if (const auto *const self = User_COMP::comp_instances_[i]) {
             if (self->handle_->Instance == hcomp->Instance) {
                 self->OnTrigger();
                 break;
@@ -33,13 +25,13 @@ User_COMP::User_COMP(COMP_HandleTypeDef *const handle) noexcept
     : handle_(handle) {
 
     assert_param(handle != nullptr);
-    assert_param(comp_count < USER_COMP_MAX_INSTANCES);
+    assert_param(comp_count_ < USER_COMP_MAX_INSTANCES);
 
-    for (std::uint32_t i = 0; i < comp_count; i++) {
-        assert_param(comp_instances[i]->handle_->Instance != handle->Instance);
+    for (uint32_t i = 0; i < comp_count_; i++) {
+        assert_param(comp_instances_[i]->handle_->Instance != handle->Instance);
     }
 
-    comp_instances[comp_count++] = this;
+    comp_instances_[comp_count_++] = this;
 }
 
 
@@ -50,20 +42,38 @@ bool User_COMP::Start(Callback const cb, void *const arg) noexcept {
         callback_arg_ = arg;
     }
 
+    HAL_StatusTypeDef status = HAL_OK;
+
     if (callback_) {
-        return (HAL_COMP_Start_IT(handle_) == HAL_OK);
+        if ((status = HAL_COMP_Start_IT(handle_)) == HAL_OK) {
+            return true;
+        }
+    } else {
+        if ((status = HAL_COMP_Start(handle_)) == HAL_OK) {
+            return true;
+        }
     }
 
-    return (HAL_COMP_Start(handle_) == HAL_OK);
+    assert_param(status == HAL_OK);
+    return false;
 }
 
 
 bool User_COMP::Stop() const noexcept {
+    HAL_StatusTypeDef status = HAL_OK;
+
     if (callback_) {
-        return (HAL_COMP_Stop_IT(handle_) == HAL_OK);
+        if ((status = HAL_COMP_Stop_IT(handle_)) == HAL_OK) {
+            return true;
+        }
+    } else {
+        if ((status = HAL_COMP_Stop(handle_)) == HAL_OK) {
+            return true;
+        }
     }
 
-    return (HAL_COMP_Stop(handle_) == HAL_OK);
+    assert_param(status == HAL_OK);
+    return false;
 }
 
 
@@ -76,21 +86,6 @@ void User_COMP::SetCallbackArg(void *const arg) noexcept {
     assert_param(callback_ != nullptr);
 
     callback_arg_ = arg;
-}
-
-
-std::uint32_t User_COMP::GetMode() const noexcept {
-    return handle_->Init.Mode;
-}
-
-
-std::uint32_t User_COMP::GetNonInvertingInput() const noexcept {
-    return handle_->Init.NonInvertingInput;
-}
-
-
-std::uint32_t User_COMP::GetInvertingInput() const noexcept {
-    return handle_->Init.InvertingInput;
 }
 
 

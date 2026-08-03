@@ -1,12 +1,13 @@
 /**
- * @file    user_iwdg.hpp
+ * @file    User_IWDG.hpp
  * @brief   独立看门狗抽象层。
  * @author  BitWalker
- * @version 1.0.0
+ * @version 1.5.0
  * @date    2026-07-14
  *
- * @note    需显式调用 Start() 启动计数器。
- *          需在独立高优先级任务中周期性调用 Refresh() 以防系统复位。
+ * @note    需调用 Start() 启动计数器。
+ *          需在独立任务中周期性调用 Refresh() 以防系统复位。
+ *          GetRefreshPeriodMs() 返回推荐的周期。
  */
 
 
@@ -43,23 +44,14 @@ class User_IWDG {
      */
     [[nodiscard]] bool Refresh() const noexcept;
 
-    /// @brief 获取当前预分频器配置值。
-    [[nodiscard]] std::uint32_t GetPrescaler() const noexcept;
-
-    /// @brief 获取当前重装载配置值。
-    [[nodiscard]] std::uint32_t GetReload() const noexcept;
-
-    /// @brief 获取当前窗口配置值。
-    [[nodiscard]] std::uint32_t GetWindow() const noexcept;
-
     /// @brief 获取超时时间。单位：ms
-    [[nodiscard]] std::uint32_t GetTimeoutMs() const noexcept;
+    [[nodiscard]] uint32_t GetTimeoutMs() const noexcept;
 
     /// @brief 获取窗口关闭时间。Window 禁用时返回 0。单位：ms
-    [[nodiscard]] std::uint32_t GetWindowMs() const noexcept;
+    [[nodiscard]] uint32_t GetWindowMs() const noexcept;
 
     /// @brief 获取推荐的喂狗周期。单位：ms
-    [[nodiscard]] std::uint32_t GetRefreshPeriodMs() const noexcept;
+    [[nodiscard]] uint32_t GetRefreshPeriodMs() const noexcept;
 
 
     User_IWDG(User_IWDG const &)            = delete;

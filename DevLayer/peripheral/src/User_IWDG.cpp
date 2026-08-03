@@ -27,22 +27,7 @@ bool User_IWDG::Refresh() const noexcept {
 }
 
 
-std::uint32_t User_IWDG::GetPrescaler() const noexcept {
-    return handle_->Init.Prescaler;
-}
-
-
-std::uint32_t User_IWDG::GetReload() const noexcept {
-    return handle_->Init.Reload;
-}
-
-
-std::uint32_t User_IWDG::GetWindow() const noexcept {
-    return handle_->Init.Window;
-}
-
-
-std::uint32_t User_IWDG::GetTimeoutMs() const noexcept {
+uint32_t User_IWDG::GetTimeoutMs() const noexcept {
     auto const prescaler = handle_->Init.Prescaler;
     auto const reload    = handle_->Init.Reload;
     auto const divider   = 4u << prescaler;
@@ -51,7 +36,7 @@ std::uint32_t User_IWDG::GetTimeoutMs() const noexcept {
 }
 
 
-std::uint32_t User_IWDG::GetWindowMs() const noexcept {
+uint32_t User_IWDG::GetWindowMs() const noexcept {
     auto const window = handle_->Init.Window;
 
     if (window == IWDG_WINDOW_DISABLE) {
@@ -66,9 +51,9 @@ std::uint32_t User_IWDG::GetWindowMs() const noexcept {
 }
 
 
-std::uint32_t User_IWDG::GetRefreshPeriodMs() const noexcept {
+uint32_t User_IWDG::GetRefreshPeriodMs() const noexcept {
     auto const timeout_ms = GetTimeoutMs();
-    std::uint32_t period_ms;
+    uint32_t period_ms;
 
     if (handle_->Init.Window == IWDG_WINDOW_DISABLE) {
         period_ms = timeout_ms / USER_IWDG_REFRESH_MARGIN;

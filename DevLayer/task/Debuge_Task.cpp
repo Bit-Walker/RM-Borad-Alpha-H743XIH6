@@ -52,7 +52,7 @@ extern "C" {
 [[noreturn]]
     void Test_COMP(void) {
         if (!comp_1.Start(COMP_Callback, &state_led)) {
-            Error_Handler();
+            assert_param(false);
         }
         while (true) {
             osDelay(pdMS_TO_TICKS(100));
@@ -72,6 +72,20 @@ extern "C" {
             if (hardware_rng.GetRandFloat(&random,10,1)) {
                 RTT_Printf(0, "%f ", random);
             }
+        }
+    }
+}
+#endif
+
+
+#ifdef HAL_CRC_MODULE_ENABLED
+extern "C" {
+[[noreturn]]
+    void Test_RNG(void) {
+        while (true) {
+            osDelay(pdMS_TO_TICKS(1000));
+            constexpr uint8_t random[3] = {0x01, 0x02, 0x03};
+            RTT_Printf(0, "%u ", hardware_crc.Calculate(random, sizeof(random)));
         }
     }
 }

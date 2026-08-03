@@ -2,6 +2,8 @@
 #define BSP_REGISTER_H
 #include "bsp_hal_handle.h"
 
+#include "peripheral/User_DWT.hpp"
+extern User_DWT dwt;
 
 #ifdef HAL_IWDG_MODULE_ENABLED
 #include "peripheral/User_IWDG.hpp"
@@ -35,6 +37,13 @@ extern User_CRC hardware_crc;
 #endif
 #endif
 
+
+#ifdef HAL_RNG_MODULE_ENABLED
+#include "peripheral/User_RNG.hpp"
+#ifdef HRNG_ENABLED
+extern User_RNG hardware_rng;
+#endif
+#endif
 
 
 #endif //BSP_REGISTER_H

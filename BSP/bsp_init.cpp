@@ -1,6 +1,10 @@
 #include "main.h"
 #include "bsp_register.h"
+#include "transport/user_rtt.h"
+#include "peripheral/User_DWT.hpp"
 
+
+User_DWT dwt;
 
 #ifdef HIWDG1_ENABLED
 // NOLINTNEXTLINE
@@ -18,6 +22,7 @@ User_LED state_led(State_LED_GPIO_Port, State_LED_Pin);
 User_COMP comp_1(&hcomp1);
 #endif
 #ifdef HCOMP2_ENABLED
+// NOLINTNEXTLINE
 User_COMP comp_2(&hcomp2);
 #endif
 
@@ -28,11 +33,18 @@ User_CRC hardware_crc(&hcrc);
 #endif
 
 
-
+#ifdef HRNG_ENABLED
+// NOLINTNEXTLINE
+User_RNG hardware_rng(&hrng);
+#endif
 
 
 extern "C" {
-    void bsp_Init() {
+    void BSP_Init() {
+        JScope_Init();
+        iwdg.Start();
+        dwt.Start();
+
 
 #ifdef DEBUG
         __HAL_DBGMCU_FREEZE_WWDG1();

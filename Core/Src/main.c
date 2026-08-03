@@ -155,7 +155,6 @@ int main(void)
   MX_IWDG1_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  JScope_Init();
   BSP_Init();
 
   /* USER CODE END 2 */

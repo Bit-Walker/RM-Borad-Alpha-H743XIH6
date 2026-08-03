@@ -2,7 +2,7 @@
  * @file    User_CRC.hpp
  * @brief   硬件 CRC 计算抽象层。
  * @author  BitWalker
- * @version 1.5.0
+ * @version 2.0.0
  * @date    2026-07-15
  *
  * @note    Calculate() 进行单次计算。
@@ -33,21 +33,21 @@ class User_CRC {
 
     /**
      * @brief  单次计算 CRC。
-     * @param  pBuffer  数据缓冲区指针。
-     * @param  length   数据长度，单位由 InputDataFormat 决定。
+     * @param  pBuffer      数据缓冲区指针。
+     * @param  byte_length  数据长度，单位：字节。
      * @return  CRC 计算结果。
      */
-    [[nodiscard]] uint32_t Calculate(uint32_t const pBuffer[],
-                                     uint32_t length) const noexcept;
+    [[nodiscard]] uint32_t Calculate(uint8_t const pBuffer[],
+                                     size_t  byte_length) const noexcept;
 
     /**
      * @brief  分块计算 CRC。
-     * @param  pBuffer  数据缓冲区指针。
-     * @param  length   数据长度，单位由 InputDataFormat 决定。
+     * @param  pBuffer      数据缓冲区指针。
+     * @param  byte_length  数据长度，单位：字节。
      * @return  当前累加的 CRC 结果。
      */
-    [[nodiscard]] uint32_t Accumulate(uint32_t const pBuffer[],
-                                      uint32_t length) const noexcept;
+    [[nodiscard]] uint32_t Accumulate(uint8_t const pBuffer[],
+                                      size_t  byte_length) const noexcept;
 
 
     User_CRC(User_CRC const &)            = delete;
@@ -61,6 +61,15 @@ class User_CRC {
 
   private:
     CRC_HandleTypeDef *handle_;  ///< CRC HAL 句柄指针。
+
+    /**
+     * @brief  将字节长度转换为 HAL 期望的缓冲区长度。
+     * @param  byte_length  以字节为单位的长度。
+     * @return HAL 期望的缓冲区长度，单位取决于 InputDataFormat。
+     * @note   若 InputDataFormat 为 WORDS 则 byte_length 应为 4 的整数倍。
+     *         若 InputDataFormat 为 HALFWORDS 则 byte_length 应为 2 的整数倍。
+     */
+    [[nodiscard]] uint32_t ToHalBufferLength(size_t byte_length) const noexcept;
 };
 
 

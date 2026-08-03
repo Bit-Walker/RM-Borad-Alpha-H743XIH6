@@ -60,6 +60,7 @@ extern DMA_HandleTypeDef hdma_lpuart1_tx;
 extern TIM_HandleTypeDef htim17;
 
 /* USER CODE BEGIN EV */
+extern void DWT_BreakpointHandle(void);
 
 /* USER CODE END EV */
 
@@ -147,6 +148,8 @@ void UsageFault_Handler(void)
 void DebugMon_Handler(void)
 {
   /* USER CODE BEGIN DebugMonitor_IRQn 0 */
+
+  DWT_BreakpointHandle();
 
   /* USER CODE END DebugMonitor_IRQn 0 */
   /* USER CODE BEGIN DebugMonitor_IRQn 1 */

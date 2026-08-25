@@ -13,6 +13,7 @@
 /* ---- typeof -------------------------------------------------------------- */
 extern int shellTypeof(int argc, char *argv[]);
 extern int shellDebug(int argc, char *argv[]);
+extern int shellClk(int argc, char *argv[]);
 
 SHELL_EXPORT_CMD(
     SHELL_CMD_PERMISSION(0) |
@@ -30,4 +31,13 @@ SHELL_EXPORT_CMD(
     debug,
     shellDebug,
     help user debug new features
+);
+
+SHELL_EXPORT_CMD(
+    SHELL_CMD_PERMISSION(0) |
+    SHELL_CMD_TYPE(SHELL_TYPE_CMD_MAIN) |
+    SHELL_CMD_DISABLE_RETURN,
+    clk,
+    shellClk,
+    print clock tree frequencies
 );

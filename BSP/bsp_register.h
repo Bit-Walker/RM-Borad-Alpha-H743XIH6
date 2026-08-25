@@ -46,4 +46,21 @@ extern User_RNG hardware_rng;
 #endif
 
 
+#ifdef HAL_TIM_MODULE_ENABLED
+#include "peripheral/User_PWM.hpp"
+#ifdef HTIM2_ENABLED
+extern User_PWM tim2_ch1_pwm;
+extern User_PWM tim2_ch2_pwm;
+extern User_PWM tim2_ch3_pwm;
+extern User_PWM tim2_ch4_pwm;
+#endif
+#ifdef HTIM5_ENABLED
+extern User_PWM tim5_ch1_pwm;
+extern User_PWM tim5_ch2_pwm;
+extern User_PWM tim5_ch3_pwm;
+extern User_PWM tim5_ch4_pwm;
+#endif
+#endif
+
+
 #endif //BSP_REGISTER_H

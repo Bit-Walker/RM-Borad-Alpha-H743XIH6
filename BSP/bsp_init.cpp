@@ -38,6 +38,29 @@ User_CRC hardware_crc(&hcrc);
 User_RNG hardware_rng(&hrng);
 #endif
 
+#ifdef HTIM2_ENABLED
+#ifdef HTIM2_ENABLED
+// NOLINTNEXTLINE
+User_PWM tim2_ch1_pwm(&htim2, TIM_CHANNEL_1, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim2_ch2_pwm(&htim2, TIM_CHANNEL_2, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim2_ch3_pwm(&htim2, TIM_CHANNEL_3, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim2_ch4_pwm(&htim2, TIM_CHANNEL_4, PWM_BIT_WIDTH::BIT_WIDTH_32);
+#endif
+#ifdef HTIM5_ENABLED
+// NOLINTNEXTLINE
+User_PWM tim5_ch1_pwm(&htim5, TIM_CHANNEL_1, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim5_ch2_pwm(&htim5, TIM_CHANNEL_2, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim5_ch3_pwm(&htim5, TIM_CHANNEL_3, PWM_BIT_WIDTH::BIT_WIDTH_32);
+// NOLINTNEXTLINE
+User_PWM tim5_ch4_pwm(&htim5, TIM_CHANNEL_4, PWM_BIT_WIDTH::BIT_WIDTH_32);
+#endif
+#endif
+
 
 extern "C" {
     void BSP_Init() {

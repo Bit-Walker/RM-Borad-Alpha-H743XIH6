@@ -92,6 +92,29 @@ extern "C" {
 #endif
 
 
+#ifdef HAL_TIM_MODULE_ENABLED
+extern "C" {
+#include "hardware/tim_freq.h"
+[[noreturn]]
+    void Test_PWM(void) {
+    assert_param(tim2_ch1_pwm.Start(TIM2_CLK));
+
+    (void)tim2_ch1_pwm.SetFrequency(1000);
+    (void)tim2_ch1_pwm.SetDuty(0.5);
+
+    while (true) {
+        osDelay(pdMS_TO_TICKS(1));
+        const float duty_wave = (sin(static_cast<float>(HAL_GetTick()) / 1000.0f) + 1.0f) / 2.0f;
+        (void)tim2_ch1_pwm.SetDuty(duty_wave);
+        const float freq_wave = (sin(static_cast<float>(HAL_GetTick()) / 100.0f ) + 1.0f) / 2.0f * 9000.0f + 1000.0f;
+        (void)tim2_ch1_pwm.SetFrequency(static_cast<uint32_t>(freq_wave));
+
+    }
+}
+}
+#endif
+
+
 extern "C" {
     void Start_Debug_Task(void *argument) {
         Test_Template();

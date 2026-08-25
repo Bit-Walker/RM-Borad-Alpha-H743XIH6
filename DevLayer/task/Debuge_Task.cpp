@@ -3,7 +3,6 @@
 #include "cmsis_os2.h"
 #include "bsp_register.h"
 #include "transport/user_rtt.h"
-#include "../shell/shell_port.h"
 
 
 extern "C" {
@@ -92,7 +91,7 @@ extern "C" {
 #endif
 
 
-#ifdef HAL_TIM_MODULE_ENABLED
+#ifdef HTIM2_ENABLED
 extern "C" {
 #include "hardware/tim_freq.h"
 [[noreturn]]
